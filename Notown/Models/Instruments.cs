@@ -4,7 +4,7 @@ using System.Linq;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace Notown1.Models
+namespace Notown.Models
 {
     public class Instruments
     {

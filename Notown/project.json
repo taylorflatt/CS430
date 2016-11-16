@@ -1,4 +1,4 @@
-﻿{
+{
   "userSecretsId": "aspnet-Notown-f2c625de-15c7-45b5-89c7-b26af814f405",
 
   "dependencies": {
@@ -43,8 +43,9 @@
     "Microsoft.VisualStudio.Web.CodeGenerators.Mvc": {
       "version": "1.0.0-preview2-final",
       "type": "build"
-    }
-  },
+    },
+    "FluentValidation.AspNetCore": "6.4.0-beta8",
+    "System.Linq.Dynamic.Core": "1.0.6.8" },
 
   "tools": {
     "BundlerMinifier.Core": "2.0.238",

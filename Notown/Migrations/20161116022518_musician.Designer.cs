@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Notown.Data;
 
-namespace Notown.Data.Migrations
+namespace Notown.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20161115212253_init")]
-    partial class init
+    [Migration("20161116022518_musician")]
+    partial class musician
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -124,6 +124,33 @@ namespace Notown.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Notown.Models.Album", b =>
+                {
+                    b.Property<int>("albumID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CopyrightDate");
+
+                    b.Property<int?>("Musiciansid");
+
+                    b.Property<int?>("Musiciansid1");
+
+                    b.Property<string>("producer");
+
+                    b.Property<int>("speed");
+
+                    b.Property<string>("title")
+                        .HasAnnotation("MaxLength", 30);
+
+                    b.HasKey("albumID");
+
+                    b.HasIndex("Musiciansid");
+
+                    b.HasIndex("Musiciansid1");
+
+                    b.ToTable("Album");
+                });
+
             modelBuilder.Entity("Notown.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id");
@@ -173,46 +200,7 @@ namespace Notown.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Notown1.Models.Album", b =>
-                {
-                    b.Property<int>("albumIdentifier")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CopyrightDate");
-
-                    b.Property<int>("speed");
-
-                    b.Property<string>("title")
-                        .HasAnnotation("MaxLength", 30);
-
-                    b.HasKey("albumIdentifier");
-
-                    b.ToTable("Album");
-                });
-
-            modelBuilder.Entity("Notown1.Models.AlbumProducerViewModel", b =>
-                {
-                    b.Property<int>("albumId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("copyrightDate");
-
-                    b.Property<int>("speed");
-
-                    b.Property<string>("ssn")
-                        .HasAnnotation("MaxLength", 10);
-
-                    b.Property<string>("title")
-                        .HasAnnotation("MaxLength", 30);
-
-                    b.HasKey("albumId");
-
-                    b.HasIndex("ssn");
-
-                    b.ToTable("AlbumProducerViewModel");
-                });
-
-            modelBuilder.Entity("Notown1.Models.Instruments", b =>
+            modelBuilder.Entity("Notown.Models.Instruments", b =>
                 {
                     b.Property<string>("instrumentId")
                         .HasAnnotation("MaxLength", 10);
@@ -228,20 +216,23 @@ namespace Notown.Data.Migrations
                     b.ToTable("Instruments");
                 });
 
-            modelBuilder.Entity("Notown1.Models.Musicians", b =>
+            modelBuilder.Entity("Notown.Models.Musicians", b =>
                 {
-                    b.Property<string>("ssn")
-                        .HasAnnotation("MaxLength", 10);
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("name")
                         .HasAnnotation("MaxLength", 30);
 
-                    b.HasKey("ssn");
+                    b.Property<string>("ssn")
+                        .HasAnnotation("MaxLength", 10);
+
+                    b.HasKey("id");
 
                     b.ToTable("Musicians");
                 });
 
-            modelBuilder.Entity("Notown1.Models.Place", b =>
+            modelBuilder.Entity("Notown.Models.Place", b =>
                 {
                     b.Property<string>("address")
                         .HasAnnotation("MaxLength", 30);
@@ -251,16 +242,16 @@ namespace Notown.Data.Migrations
                     b.ToTable("Place");
                 });
 
-            modelBuilder.Entity("Notown1.Models.Songs", b =>
+            modelBuilder.Entity("Notown.Models.Songs", b =>
                 {
                     b.Property<int>("songId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("Musiciansid");
+
                     b.Property<int>("albumId");
 
-                    b.Property<int?>("albumIdentifier");
-
-                    b.Property<string>("author")
+                    b.Property<string>("name")
                         .HasAnnotation("MaxLength", 30);
 
                     b.Property<string>("title")
@@ -268,14 +259,14 @@ namespace Notown.Data.Migrations
 
                     b.HasKey("songId");
 
-                    b.HasIndex("albumId");
+                    b.HasIndex("Musiciansid");
 
-                    b.HasIndex("albumIdentifier");
+                    b.HasIndex("albumId");
 
                     b.ToTable("Songs");
                 });
 
-            modelBuilder.Entity("Notown1.Models.Telephone", b =>
+            modelBuilder.Entity("Notown.Models.Telephone", b =>
                 {
                     b.Property<string>("phone")
                         .HasAnnotation("MaxLength", 1);
@@ -327,28 +318,32 @@ namespace Notown.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Notown1.Models.AlbumProducerViewModel", b =>
+            modelBuilder.Entity("Notown.Models.Album", b =>
                 {
-                    b.HasOne("Notown1.Models.Musicians", "Musicians")
+                    b.HasOne("Notown.Models.Musicians")
+                        .WithMany("Album")
+                        .HasForeignKey("Musiciansid");
+
+                    b.HasOne("Notown.Models.Musicians", "Musicians")
                         .WithMany()
-                        .HasForeignKey("ssn");
+                        .HasForeignKey("Musiciansid1");
                 });
 
-            modelBuilder.Entity("Notown1.Models.Songs", b =>
+            modelBuilder.Entity("Notown.Models.Songs", b =>
                 {
-                    b.HasOne("Notown1.Models.AlbumProducerViewModel", "AlbumProducerViewModel")
+                    b.HasOne("Notown.Models.Musicians", "Musicians")
                         .WithMany()
+                        .HasForeignKey("Musiciansid");
+
+                    b.HasOne("Notown.Models.Album", "Album")
+                        .WithMany("Songs")
                         .HasForeignKey("albumId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Notown1.Models.Album")
-                        .WithMany("Songs")
-                        .HasForeignKey("albumIdentifier");
                 });
 
-            modelBuilder.Entity("Notown1.Models.Telephone", b =>
+            modelBuilder.Entity("Notown.Models.Telephone", b =>
                 {
-                    b.HasOne("Notown1.Models.Place", "Place")
+                    b.HasOne("Notown.Models.Place", "Place")
                         .WithMany()
                         .HasForeignKey("address");
                 });

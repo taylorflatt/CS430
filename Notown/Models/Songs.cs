@@ -4,7 +4,7 @@ using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Notown1.Models
+namespace Notown.Models
 {
     public class Songs
     {
@@ -12,14 +12,18 @@ namespace Notown1.Models
         public int songId { get; set; }
 
         [StringLength(30, ErrorMessage = "The author must be no longer than 30 characters.")]
-        public string author { get; set; }
+        [Display(Name = "Author", Description = "The name of artist who created this song.")]
+        public string name { get; set; }
 
         [StringLength(30, ErrorMessage = "The title must be no longer than 30 characters.")]
+        [Display(Name = "Song Title")]
         public string title { get; set; }
 
-        [ForeignKey("AlbumProducerViewModel")]
+        [ForeignKey("Album")]
+        [Display(Name = "Album ID", Description = "The specific ID given to each unique album which contains this song.")]
         public int albumId { get; set; }
 
-        public virtual AlbumProducerViewModel AlbumProducerViewModel { get; set; }
+        public virtual Album Album { get; set; }
+        public virtual Musicians Musicians { get; set; }
     }
 }

@@ -1,0 +1,53 @@
+@model IEnumerable<Notown.Models.Album>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.producer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CopyrightDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.speed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.title)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(model => item.producer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CopyrightDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.speed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.title)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.albumID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.albumID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.albumID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

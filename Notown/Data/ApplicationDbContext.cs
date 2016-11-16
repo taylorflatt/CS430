@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Notown.Models;
-using Notown1.Models;
+using Notown.Models.NotownViewModels;
 
 namespace Notown.Data
 {
@@ -32,6 +32,14 @@ namespace Notown.Data
             builder.Entity<Place>().ToTable("Place");
             builder.Entity<Songs>().ToTable("Songs");
             builder.Entity<Telephone>().ToTable("Telephone");
+
+            builder.Entity<Songs>()
+                .HasOne(m => m.Musicians)
+                .WithMany();
+
+            builder.Entity<Musicians>()
+                .HasMany(a => a.Album)
+                .WithOne();
 
             base.OnModelCreating(builder);
             // Customize the ASP.NET Identity model and override the defaults if needed.
