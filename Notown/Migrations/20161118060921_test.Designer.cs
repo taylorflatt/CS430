@@ -8,9 +8,10 @@ using Notown.Data;
 namespace Notown.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161118060921_test")]
+    partial class test
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
@@ -244,9 +245,7 @@ namespace Notown.Migrations
 
                     b.Property<int?>("Musiciansid");
 
-                    b.Property<int?>("albumId");
-
-                    b.Property<int>("albumIdForeignKey");
+                    b.Property<int>("albumId");
 
                     b.Property<string>("name")
                         .HasAnnotation("MaxLength", 30);
@@ -258,7 +257,7 @@ namespace Notown.Migrations
 
                     b.HasIndex("Musiciansid");
 
-                    b.HasIndex("albumIdForeignKey");
+                    b.HasIndex("albumId");
 
                     b.ToTable("Songs");
                 });
@@ -330,7 +329,7 @@ namespace Notown.Migrations
 
                     b.HasOne("Notown.Models.Album", "Album")
                         .WithMany("Songs")
-                        .HasForeignKey("albumIdForeignKey")
+                        .HasForeignKey("albumId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

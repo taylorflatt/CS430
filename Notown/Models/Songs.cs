@@ -19,11 +19,12 @@ namespace Notown.Models
         [Display(Name = "Song Title")]
         public string title { get; set; }
 
-        [ForeignKey("Album")]
         [Display(Name = "Album ID", Description = "The specific ID given to each unique album which contains this song.")]
-        public int albumId { get; set; }
+        public int albumIdForeignKey { get; set; }
 
+        [ForeignKey("albumIdForeignKey")]
         public virtual Album Album { get; set; }
+
         public virtual Musicians Musicians { get; set; }
     }
 }

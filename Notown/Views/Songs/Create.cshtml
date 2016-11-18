@@ -12,10 +12,10 @@
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
-            <label asp-for="albumId" class="col-md-2 control-label"></label>
+            <label asp-for="albumIdForeignKey" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="albumId" type="number" class="form-control" />
-                <span asp-validation-for="albumId" class="text-danger" />
+                <input asp-for="albumIdForeignKey" type="number" class="form-control" />
+                <span asp-validation-for="albumIdForeignKey" class="text-danger" />
                 @*<select asp-for="albumId" type="number" class ="form-control" asp-items="ViewBag.albumId"></select>*@
             </div>
         </div>

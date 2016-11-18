@@ -22,12 +22,9 @@ namespace Notown.Models
 
         [StringLength(30, ErrorMessage = "The title must be no longer than 30 characters.")]
         public string title { get; set; }
-
-        [ForeignKey("Musicians.name")]
         public string producer { get; set; }
-
+        
         public virtual ICollection<Songs> Songs { get; set; }
-
         public virtual Musicians Musicians { get; set; }
     }
 

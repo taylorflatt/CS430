@@ -8,8 +8,8 @@ using Notown.Data;
 namespace Notown.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20161116022701_songs")]
-    partial class songs
+    [Migration("20161118062331_test4")]
+    partial class test4
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -133,8 +133,6 @@ namespace Notown.Migrations
 
                     b.Property<int?>("Musiciansid");
 
-                    b.Property<int?>("Musiciansid1");
-
                     b.Property<string>("producer");
 
                     b.Property<int>("speed");
@@ -145,8 +143,6 @@ namespace Notown.Migrations
                     b.HasKey("albumID");
 
                     b.HasIndex("Musiciansid");
-
-                    b.HasIndex("Musiciansid1");
 
                     b.ToTable("Album");
                 });
@@ -320,13 +316,9 @@ namespace Notown.Migrations
 
             modelBuilder.Entity("Notown.Models.Album", b =>
                 {
-                    b.HasOne("Notown.Models.Musicians")
+                    b.HasOne("Notown.Models.Musicians", "Musicians")
                         .WithMany("Album")
                         .HasForeignKey("Musiciansid");
-
-                    b.HasOne("Notown.Models.Musicians", "Musicians")
-                        .WithMany()
-                        .HasForeignKey("Musiciansid1");
                 });
 
             modelBuilder.Entity("Notown.Models.Songs", b =>

@@ -25,6 +25,7 @@ namespace Notown.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
 
             builder.Entity<Album>().ToTable("Album");
             builder.Entity<Instruments>().ToTable("Instruments");
@@ -34,14 +35,30 @@ namespace Notown.Data
             builder.Entity<Telephone>().ToTable("Telephone");
 
             builder.Entity<Songs>()
-                .HasOne(m => m.Musicians)
-                .WithMany();
+                .HasOne(a => a.Album)
+                .WithMany(s => s.Songs)
+                .HasForeignKey(a => a.albumIdForeignKey);
 
-            builder.Entity<Musicians>()
-                .HasMany(a => a.Album)
-                .WithOne();
+            builder.Entity<Album>()
+                .HasMany(s => s.Songs)
+                .WithOne(a => a.Album)
+                .HasPrincipalKey(s => s.albumID);
 
-            base.OnModelCreating(builder);
+
+
+            //builder.Entity<Album>()
+            //    .HasMany(s => s.Songs)
+            //    .WithOne(a => a.Album)
+            //    .HasForeignKey(s => s.albumId);
+
+            //builder.Entity<Songs>()
+            //    .HasOne(m => m.Musicians)
+            //    .WithMany();
+
+            //builder.Entity<Musicians>()
+            //    .HasMany(a => a.Album)
+            //    .WithOne(m => m.Musicians);
+
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);

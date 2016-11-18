@@ -53,7 +53,7 @@ namespace Notown.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ssn,name")] Musicians musicians)
+        public async Task<IActionResult> Create([Bind("id,ssn,name")] Musicians musicians)
         {
             if (ModelState.IsValid)
             {
@@ -85,7 +85,7 @@ namespace Notown.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("ssn,name")] Musicians musicians)
+        public async Task<IActionResult> Edit(string id, [Bind("id,ssn,name")] Musicians musicians)
         {
             if (id != musicians.ssn)
             {

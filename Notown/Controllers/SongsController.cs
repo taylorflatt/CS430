@@ -23,7 +23,7 @@ namespace Notown.Controllers
         // GET: Collection
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Songs.Include(s => s.Album);
+            var applicationDbContext = _context.Songs.Include(s => s.songId);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -56,19 +56,45 @@ namespace Notown.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("songId,albumId,name,title")] Songs songs)
+        public async Task<IActionResult> Create([Bind("songId,albumIdForeignKey,name,title")] Songs songs)
         {
+            // See if that album id exists in the album database.
+            var albumIds = _context.Album.Count(m => m.albumID == songs.albumIdForeignKey);
+
+            if (albumIds == 0)
+                ModelState.AddModelError("", "That album ID doesn't exist in the album database!");
+            else if(albumIds > 1)   // This shouldn't happen, but let's test for it just in case.
+                ModelState.AddModelError("", "We found multiple albums with that ID. Something went wrong!");
+
             if (ModelState.IsValid)
             {
-                //var musicianId = _context.Musicians.(songs.albumId);
-                songs.Musicians.id = 1;
+                //var albumModel = _context.Album.SingleOrDefault(a => a.albumID == songs.albumId);
+                //albumModel.Songs.Add(_context.Songs.Single(s => s.name == songs.name));
+
+                var songAlbum = _context.Album.SingleOrDefault(a => a.albumID == songs.albumIdForeignKey);
+
+                var count = 0;
+                var songList = new List<Songs>();
+
+                foreach (var song in _context.Songs)
+                {
+                    if (song.albumIdForeignKey == song.Album.albumID)
+                    {
+                        count++;
+                        songList.Add(song);
+                    }
+                }
+
+                //songAlbum.Songs.ToList().Add(songs);
+
+                //songAlbum.Songs.Add(songs);
 
                 _context.Add(songs);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewData["albumId"] = new SelectList(_context.Album, "albumIdentifier", "albumIdentifier", songs.albumId);
+            ViewData["albumId"] = new SelectList(_context.Album, "albumIdentifier", "albumIdentifier", songs.albumIdForeignKey);
             return View(songs);
         }
 
@@ -85,7 +111,7 @@ namespace Notown.Controllers
             {
                 return NotFound();
             }
-            ViewData["albumId"] = new SelectList(_context.Album, "albumIdentifier", "albumIdentifier", songs.albumId);
+            ViewData["albumId"] = new SelectList(_context.Album, "albumIdentifier", "albumIdentifier", songs.albumIdForeignKey);
             return View(songs);
         }
 
@@ -94,7 +120,7 @@ namespace Notown.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("songId,albumId,author,title")] Songs songs)
+        public async Task<IActionResult> Edit(int id, [Bind("songId,albumIdForeignKey,author,title")] Songs songs)
         {
             if (id != songs.songId)
             {
@@ -121,7 +147,7 @@ namespace Notown.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["albumId"] = new SelectList(_context.Album, "albumIdentifier", "albumIdentifier", songs.albumId);
+            ViewData["albumId"] = new SelectList(_context.Album, "albumIdentifier", "albumIdentifier", songs.albumIdForeignKey);
             return View(songs);
         }
 
