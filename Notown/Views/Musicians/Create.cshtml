@@ -19,6 +19,12 @@
             </div>
         </div>
         <div class="form-group">
+            <label asp-for="placeForeignKey" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="placeForeignKey" class ="form-control" asp-items="ViewBag.placeForeignKey"></select>
+            </div>
+        </div>
+        <div class="form-group">
             <label asp-for="ssn" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <input asp-for="ssn" class="form-control" />

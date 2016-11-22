@@ -9,13 +9,14 @@ namespace Notown.Models
     public class Instruments
     {
         [Key]
-        [StringLength(10, ErrorMessage = "The instrument ID must be no longer than 10 characters.")]
-        public string instrumentId { get; set; }
+        public int instruId { get; set; }
 
         [StringLength(30, ErrorMessage = "The dname must be no longer than 30 characters.")]
         public string dName { get; set; }
 
         [StringLength(5, ErrorMessage = "The particular instrument key must be no longer than 5 characters.")]
         public string key { get; set; }
+
+        public virtual Musicians Musician { get; set; }
     }
 }

@@ -22,7 +22,8 @@ namespace Notown.Controllers
         // GET: Musicians
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Musicians.ToListAsync());
+            var applicationDbContext = _context.Musicians.Include(m => m.Place);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Musicians/Details/5
@@ -34,17 +35,26 @@ namespace Notown.Controllers
             }
 
             var musicians = await _context.Musicians.SingleOrDefaultAsync(m => m.id == id);
+
+            foreach(var song in _context.Songs)
+            {
+                if (song.musicianIdForeignKey == song.songId)
+                    musicians.Song.Add(song);
+            }
+
             if (musicians == null)
             {
                 return NotFound();
             }
 
+            //ViewData["songForeignKey"] = new SelectList(_context.Songs, "songId", "title");
             return View(musicians);
         }
 
         // GET: Musicians/Create
         public IActionResult Create()
         {
+            ViewData["placeForeignKey"] = new SelectList(_context.Place, "address", "address");
             return View();
         }
 
@@ -53,7 +63,7 @@ namespace Notown.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,ssn,name")] Musicians musicians)
+        public async Task<IActionResult> Create([Bind("id,name,placeForeignKey,ssn")] Musicians musicians)
         {
             if (ModelState.IsValid)
             {
@@ -61,6 +71,7 @@ namespace Notown.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+            ViewData["placeForeignKey"] = new SelectList(_context.Place, "address", "address", musicians.placeForeignKey);
             return View(musicians);
         }
 
@@ -77,6 +88,7 @@ namespace Notown.Controllers
             {
                 return NotFound();
             }
+            ViewData["placeForeignKey"] = new SelectList(_context.Place, "address", "address", musicians.placeForeignKey);
             return View(musicians);
         }
 
@@ -85,9 +97,9 @@ namespace Notown.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("id,ssn,name")] Musicians musicians)
+        public async Task<IActionResult> Edit(int id, [Bind("id,name,placeForeignKey,ssn")] Musicians musicians)
         {
-            if (id != musicians.ssn)
+            if (id != musicians.id)
             {
                 return NotFound();
             }
@@ -101,7 +113,7 @@ namespace Notown.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MusiciansExists(musicians.ssn))
+                    if (!MusiciansExists(musicians.id))
                     {
                         return NotFound();
                     }
@@ -112,6 +124,7 @@ namespace Notown.Controllers
                 }
                 return RedirectToAction("Index");
             }
+            ViewData["placeForeignKey"] = new SelectList(_context.Place, "address", "address", musicians.placeForeignKey);
             return View(musicians);
         }
 
@@ -135,17 +148,17 @@ namespace Notown.Controllers
         // POST: Musicians/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var musicians = await _context.Musicians.SingleOrDefaultAsync(m => m.ssn == id);
+            var musicians = await _context.Musicians.SingleOrDefaultAsync(m => m.id == id);
             _context.Musicians.Remove(musicians);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
-        private bool MusiciansExists(string id)
+        private bool MusiciansExists(int id)
         {
-            return _context.Musicians.Any(e => e.ssn == id);
+            return _context.Musicians.Any(e => e.id == id);
         }
     }
 }

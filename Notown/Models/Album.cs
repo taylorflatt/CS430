@@ -9,7 +9,7 @@ using FluentValidation.Attributes;
 
 namespace Notown.Models
 {
-    [Validator(typeof(AlbumValidator))]
+    //[Validator(typeof(AlbumValidator))]
     public class Album
     {
         [Key]
@@ -21,29 +21,33 @@ namespace Notown.Models
         public DateTime CopyrightDate { get; set; }
 
         [StringLength(30, ErrorMessage = "The title must be no longer than 30 characters.")]
+        [Required]
         public string title { get; set; }
-        public string producer { get; set; }
+
+        [Required]
+        public int producer { get; set; }
         
         public virtual ICollection<Songs> Songs { get; set; }
+
+        [ForeignKey("producer")]
         public virtual Musicians Musicians { get; set; }
     }
 
-    public class AlbumValidator : AbstractValidator<Album>
-    {
-        private readonly ApplicationDbContext _context;
+    //public class AlbumValidator : AbstractValidator<Album>
+    //{
+    //    private readonly ApplicationDbContext _context;
 
-        public AlbumValidator(ApplicationDbContext context)
-        {
-            _context = context;
+    //    public AlbumValidator(ApplicationDbContext context)
+    //    {
+    //        _context = context;
 
-            RuleFor(album => album.producer).Must(ProducerExists).WithMessage("The producer must exist in the Artists catalog first.");
-        }
+    //        RuleFor(album => album.producer).Must(ProducerExists).WithMessage("The producer must exist in the Artists catalog first.");
+    //    }
 
-        // Check if a musician in the Musicians table has the name of the producer we are trying to add to an album.
-        private bool ProducerExists(string value)
-        {
-            return _context.Musicians.Any(p => p.name == value);
-        }
-    }
-
+    //    Check if a musician in the Musicians table has the name of the producer we are trying to add to an album.
+    //    private bool ProducerExists(string value)
+    //    {
+    //        return _context.Musicians.Any(p => p.name == value);
+    //    }
+    //}
 }

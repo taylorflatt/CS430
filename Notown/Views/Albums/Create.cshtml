@@ -21,8 +21,7 @@
         <div class="form-group">
             <label asp-for="producer" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="producer" class="form-control" />
-                <span asp-validation-for="producer" class="text-danger" />
+                <select asp-for="producer" class="form-control" asp-items="ViewBag.producer"></select>
             </div>
         </div>
         <div class="form-group">

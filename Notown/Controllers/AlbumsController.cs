@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Notown.Data;
 using Notown.Models;
-using FluentValidation.Results;
-using FluentValidation.AspNetCore;
 
 namespace Notown.Controllers
 {
@@ -18,7 +16,7 @@ namespace Notown.Controllers
 
         public AlbumsController(ApplicationDbContext context)
         {
-            _context = context;
+            _context = context;    
         }
 
         // GET: Albums
@@ -31,20 +29,15 @@ namespace Notown.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-                return NotFound();
-
-            var album = await _context.Album.SingleOrDefaultAsync(m => m.albumID == id);
-            
-            // Short-cut in populating the getting the songs for each album. This SHOULD be happening 
-            // at the DB level. But it isn't for some reason.
-            foreach (var song in _context.Songs)
             {
-                if (song.albumIdForeignKey == song.Album.albumID)
-                    album.Songs.Add(song);
+                return NotFound();
             }
 
+            var album = await _context.Album.SingleOrDefaultAsync(m => m.albumID == id);
             if (album == null)
+            {
                 return NotFound();
+            }
 
             return View(album);
         }
@@ -52,6 +45,7 @@ namespace Notown.Controllers
         // GET: Albums/Create
         public IActionResult Create()
         {
+            ViewData["producer"] = new SelectList(_context.Musicians, "id", "name");
             return View();
         }
 
@@ -60,7 +54,7 @@ namespace Notown.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("albumID,producer,CopyrightDate,speed,title")] Album album)
+        public async Task<IActionResult> Create([Bind("albumID,CopyrightDate,producer,speed,title")] Album album)
         {
             if (ModelState.IsValid)
             {
@@ -80,7 +74,6 @@ namespace Notown.Controllers
             }
 
             var album = await _context.Album.SingleOrDefaultAsync(m => m.albumID == id);
-
             if (album == null)
             {
                 return NotFound();
@@ -93,22 +86,14 @@ namespace Notown.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("albumID,producer,CopyrightDate,speed,title")] Album album)
+        public async Task<IActionResult> Edit(int id, [Bind("albumID,CopyrightDate,producer,speed,title")] Album album)
         {
             if (id != album.albumID)
             {
                 return NotFound();
             }
 
-            AlbumValidator validator = new AlbumValidator(_context);
-            ValidationResult results = validator.Validate(album);
-            results.AddToModelState(ModelState, null);
-
-            // TODO: Add model error to top of the page if it an error is found. Need to still investigate data model error 
-            // binding since it is all contained iwthin the results variable. I'm just not sure how to serve that to the 
-            // view from here.
-
-            if (ModelState.IsValid && results.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -128,17 +113,6 @@ namespace Notown.Controllers
                 }
                 return RedirectToAction("Index");
             }
-
-            //ModelState.AddModelError("", "Error");
-
-            // DEBUG
-            //if(!results.IsValid)
-            //{
-            //    foreach(var failure in results.Errors)
-            //    {
-            //        throw new Exception("Property: " + failure.PropertyName + ". Error Message: " + failure.ErrorMessage + ".");
-            //    }
-            //}
             return View(album);
         }
 

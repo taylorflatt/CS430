@@ -7,27 +7,26 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Notown.Data;
 using Notown.Models;
-using Notown.Models.NotownViewModels;
 
 namespace Notown.Controllers
 {
-    public class SongsController : Controller
+    public class SongController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public SongsController(ApplicationDbContext context)
+        public SongController(ApplicationDbContext context)
         {
             _context = context;    
         }
 
-        // GET: Collection
+        // GET: Song
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Songs.Include(s => s.songId);
+            var applicationDbContext = _context.Songs.Include(s => s.Album);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Collection/Details/5
+        // GET: Song/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -44,61 +43,33 @@ namespace Notown.Controllers
             return View(songs);
         }
 
-        // GET: Collection/Create
+        // GET: Song/Create
         public IActionResult Create()
         {
-            ViewData["albumId"] = new SelectList(_context.Album, "albumIdentifier", "albumIdentifier");
+            ViewData["albumIdForeignKey"] = new SelectList(_context.Album, "albumID", "title");
+            ViewData["musicianIdForeignKey"] = new SelectList(_context.Musicians, "id", "name");
             return View();
         }
 
-        // POST: Collection/Create
+        // POST: Song/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("songId,albumIdForeignKey,name,title")] Songs songs)
+        public async Task<IActionResult> Create([Bind("songId,albumIdForeignKey,musicianIdForeignKey,title")] Songs songs)
         {
-            // See if that album id exists in the album database.
-            var albumIds = _context.Album.Count(m => m.albumID == songs.albumIdForeignKey);
-
-            if (albumIds == 0)
-                ModelState.AddModelError("", "That album ID doesn't exist in the album database!");
-            else if(albumIds > 1)   // This shouldn't happen, but let's test for it just in case.
-                ModelState.AddModelError("", "We found multiple albums with that ID. Something went wrong!");
-
             if (ModelState.IsValid)
             {
-                //var albumModel = _context.Album.SingleOrDefault(a => a.albumID == songs.albumId);
-                //albumModel.Songs.Add(_context.Songs.Single(s => s.name == songs.name));
-
-                var songAlbum = _context.Album.SingleOrDefault(a => a.albumID == songs.albumIdForeignKey);
-
-                var count = 0;
-                var songList = new List<Songs>();
-
-                foreach (var song in _context.Songs)
-                {
-                    if (song.albumIdForeignKey == song.Album.albumID)
-                    {
-                        count++;
-                        songList.Add(song);
-                    }
-                }
-
-                //songAlbum.Songs.ToList().Add(songs);
-
-                //songAlbum.Songs.Add(songs);
-
                 _context.Add(songs);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-
-            ViewData["albumId"] = new SelectList(_context.Album, "albumIdentifier", "albumIdentifier", songs.albumIdForeignKey);
+            ViewData["albumIdForeignKey"] = new SelectList(_context.Album, "albumID", "title", songs.albumIdForeignKey);
+            ViewData["musicianIdForeignKey"] = new SelectList(_context.Musicians, "id", "name", songs.musicianIdForeignKey);
             return View(songs);
         }
 
-        // GET: Collection/Edit/5
+        // GET: Song/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -111,16 +82,16 @@ namespace Notown.Controllers
             {
                 return NotFound();
             }
-            ViewData["albumId"] = new SelectList(_context.Album, "albumIdentifier", "albumIdentifier", songs.albumIdForeignKey);
+            ViewData["albumIdForeignKey"] = new SelectList(_context.Album, "albumID", "title", songs.albumIdForeignKey);
             return View(songs);
         }
 
-        // POST: Collection/Edit/5
+        // POST: Song/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("songId,albumIdForeignKey,author,title")] Songs songs)
+        public async Task<IActionResult> Edit(int id, [Bind("songId,albumIdForeignKey,title")] Songs songs)
         {
             if (id != songs.songId)
             {
@@ -147,11 +118,11 @@ namespace Notown.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["albumId"] = new SelectList(_context.Album, "albumIdentifier", "albumIdentifier", songs.albumIdForeignKey);
+            ViewData["albumIdForeignKey"] = new SelectList(_context.Album, "albumID", "title", songs.albumIdForeignKey);
             return View(songs);
         }
 
-        // GET: Collection/Delete/5
+        // GET: Song/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -168,7 +139,7 @@ namespace Notown.Controllers
             return View(songs);
         }
 
-        // POST: Collection/Delete/5
+        // POST: Song/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -130,18 +130,17 @@ namespace Notown.Migrations
 
                     b.Property<DateTime>("CopyrightDate");
 
-                    b.Property<int?>("Musiciansid");
-
-                    b.Property<string>("producer");
+                    b.Property<int>("producer");
 
                     b.Property<int>("speed");
 
                     b.Property<string>("title")
+                        .IsRequired()
                         .HasAnnotation("MaxLength", 30);
 
                     b.HasKey("albumID");
 
-                    b.HasIndex("Musiciansid");
+                    b.HasIndex("producer");
 
                     b.ToTable("Album");
                 });
@@ -197,8 +196,8 @@ namespace Notown.Migrations
 
             modelBuilder.Entity("Notown.Models.Instruments", b =>
                 {
-                    b.Property<string>("instrumentId")
-                        .HasAnnotation("MaxLength", 10);
+                    b.Property<int>("instruId")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("dName")
                         .HasAnnotation("MaxLength", 30);
@@ -206,7 +205,7 @@ namespace Notown.Migrations
                     b.Property<string>("key")
                         .HasAnnotation("MaxLength", 5);
 
-                    b.HasKey("instrumentId");
+                    b.HasKey("instruId");
 
                     b.ToTable("Instruments");
                 });
@@ -216,13 +215,25 @@ namespace Notown.Migrations
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("InstrumentinstruId");
+
                     b.Property<string>("name")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 30);
+
+                    b.Property<string>("placeForeignKey")
                         .HasAnnotation("MaxLength", 30);
 
                     b.Property<string>("ssn")
+                        .IsRequired()
                         .HasAnnotation("MaxLength", 10);
 
                     b.HasKey("id");
+
+                    b.HasIndex("InstrumentinstruId")
+                        .IsUnique();
+
+                    b.HasIndex("placeForeignKey");
 
                     b.ToTable("Musicians");
                 });
@@ -232,7 +243,13 @@ namespace Notown.Migrations
                     b.Property<string>("address")
                         .HasAnnotation("MaxLength", 30);
 
+                    b.Property<string>("phone")
+                        .HasAnnotation("MaxLength", 1);
+
                     b.HasKey("address");
+
+                    b.HasIndex("phone")
+                        .IsUnique();
 
                     b.ToTable("Place");
                 });
@@ -242,23 +259,19 @@ namespace Notown.Migrations
                     b.Property<int>("songId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("Musiciansid");
-
-                    b.Property<int?>("albumId");
-
                     b.Property<int>("albumIdForeignKey");
 
-                    b.Property<string>("name")
-                        .HasAnnotation("MaxLength", 30);
+                    b.Property<int>("musicianIdForeignKey");
 
                     b.Property<string>("title")
+                        .IsRequired()
                         .HasAnnotation("MaxLength", 30);
 
                     b.HasKey("songId");
 
-                    b.HasIndex("Musiciansid");
-
                     b.HasIndex("albumIdForeignKey");
+
+                    b.HasIndex("musicianIdForeignKey");
 
                     b.ToTable("Songs");
                 });
@@ -268,12 +281,7 @@ namespace Notown.Migrations
                     b.Property<string>("phone")
                         .HasAnnotation("MaxLength", 1);
 
-                    b.Property<string>("address")
-                        .HasAnnotation("MaxLength", 30);
-
                     b.HasKey("phone");
-
-                    b.HasIndex("address");
 
                     b.ToTable("Telephone");
                 });
@@ -319,26 +327,39 @@ namespace Notown.Migrations
                 {
                     b.HasOne("Notown.Models.Musicians", "Musicians")
                         .WithMany("Album")
-                        .HasForeignKey("Musiciansid");
+                        .HasForeignKey("producer")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Notown.Models.Musicians", b =>
+                {
+                    b.HasOne("Notown.Models.Instruments", "Instrument")
+                        .WithOne("Musician")
+                        .HasForeignKey("Notown.Models.Musicians", "InstrumentinstruId");
+
+                    b.HasOne("Notown.Models.Place", "Place")
+                        .WithMany("Musicians")
+                        .HasForeignKey("placeForeignKey");
+                });
+
+            modelBuilder.Entity("Notown.Models.Place", b =>
+                {
+                    b.HasOne("Notown.Models.Telephone", "Telephone")
+                        .WithOne("Place")
+                        .HasForeignKey("Notown.Models.Place", "phone");
                 });
 
             modelBuilder.Entity("Notown.Models.Songs", b =>
                 {
-                    b.HasOne("Notown.Models.Musicians", "Musicians")
-                        .WithMany()
-                        .HasForeignKey("Musiciansid");
-
                     b.HasOne("Notown.Models.Album", "Album")
                         .WithMany("Songs")
                         .HasForeignKey("albumIdForeignKey")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
 
-            modelBuilder.Entity("Notown.Models.Telephone", b =>
-                {
-                    b.HasOne("Notown.Models.Place", "Place")
-                        .WithMany()
-                        .HasForeignKey("address");
+                    b.HasOne("Notown.Models.Musicians", "Musicians")
+                        .WithMany("Song")
+                        .HasForeignKey("musicianIdForeignKey")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
         }
     }

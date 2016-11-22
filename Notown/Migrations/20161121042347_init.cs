@@ -66,38 +66,25 @@ namespace Notown.Migrations
                 name: "Instruments",
                 columns: table => new
                 {
-                    instrumentId = table.Column<string>(maxLength: 10, nullable: false),
+                    instruId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     dName = table.Column<string>(maxLength: 30, nullable: true),
                     key = table.Column<string>(maxLength: 5, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Instruments", x => x.instrumentId);
+                    table.PrimaryKey("PK_Instruments", x => x.instruId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Musicians",
+                name: "Telephone",
                 columns: table => new
                 {
-                    id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    name = table.Column<string>(maxLength: 30, nullable: true),
-                    ssn = table.Column<string>(maxLength: 10, nullable: true)
+                    phone = table.Column<string>(maxLength: 1, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Musicians", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Place",
-                columns: table => new
-                {
-                    address = table.Column<string>(maxLength: 30, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Place", x => x.address);
+                    table.PrimaryKey("PK_Telephone", x => x.phone);
                 });
 
             migrationBuilder.CreateTable(
@@ -187,43 +174,71 @@ namespace Notown.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Place",
+                columns: table => new
+                {
+                    address = table.Column<string>(maxLength: 30, nullable: false),
+                    phone = table.Column<string>(maxLength: 1, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Place", x => x.address);
+                    table.ForeignKey(
+                        name: "FK_Place_Telephone_phone",
+                        column: x => x.phone,
+                        principalTable: "Telephone",
+                        principalColumn: "phone",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Musicians",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    InstrumentinstruId = table.Column<int>(nullable: true),
+                    name = table.Column<string>(maxLength: 30, nullable: false),
+                    placeForeignKey = table.Column<string>(maxLength: 30, nullable: true),
+                    ssn = table.Column<string>(maxLength: 10, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Musicians", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Musicians_Instruments_InstrumentinstruId",
+                        column: x => x.InstrumentinstruId,
+                        principalTable: "Instruments",
+                        principalColumn: "instruId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Musicians_Place_placeForeignKey",
+                        column: x => x.placeForeignKey,
+                        principalTable: "Place",
+                        principalColumn: "address",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Album",
                 columns: table => new
                 {
                     albumID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CopyrightDate = table.Column<DateTime>(nullable: false),
-                    Musiciansid = table.Column<int>(nullable: true),
+                    producer = table.Column<int>(nullable: false),
                     speed = table.Column<int>(nullable: false),
-                    title = table.Column<string>(maxLength: 30, nullable: true)
+                    title = table.Column<string>(maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Album", x => x.albumID);
                     table.ForeignKey(
-                        name: "FK_Album_Musicians_Musiciansid",
-                        column: x => x.Musiciansid,
+                        name: "FK_Album_Musicians_producer",
+                        column: x => x.producer,
                         principalTable: "Musicians",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Telephone",
-                columns: table => new
-                {
-                    phone = table.Column<string>(maxLength: 1, nullable: false),
-                    address = table.Column<string>(maxLength: 30, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Telephone", x => x.phone);
-                    table.ForeignKey(
-                        name: "FK_Telephone_Place_address",
-                        column: x => x.address,
-                        principalTable: "Place",
-                        principalColumn: "address",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -232,10 +247,9 @@ namespace Notown.Migrations
                 {
                     songId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Musiciansid = table.Column<int>(nullable: false),
-                    albumId = table.Column<int>(nullable: false),
-                    name = table.Column<string>(maxLength: 30, nullable: true),
-                    title = table.Column<string>(maxLength: 30, nullable: true)
+                    Musiciansid = table.Column<int>(nullable: true),
+                    albumIdForeignKey = table.Column<int>(nullable: false),
+                    title = table.Column<string>(maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -245,10 +259,10 @@ namespace Notown.Migrations
                         column: x => x.Musiciansid,
                         principalTable: "Musicians",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Songs_Album_albumId",
-                        column: x => x.albumId,
+                        name: "FK_Songs_Album_albumIdForeignKey",
+                        column: x => x.albumIdForeignKey,
                         principalTable: "Album",
                         principalColumn: "albumID",
                         onDelete: ReferentialAction.Cascade);
@@ -285,9 +299,9 @@ namespace Notown.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Album_Musiciansid",
+                name: "IX_Album_producer",
                 table: "Album",
-                column: "Musiciansid");
+                column: "producer");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -301,19 +315,31 @@ namespace Notown.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Musicians_InstrumentinstruId",
+                table: "Musicians",
+                column: "InstrumentinstruId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Musicians_placeForeignKey",
+                table: "Musicians",
+                column: "placeForeignKey");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Place_phone",
+                table: "Place",
+                column: "phone",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Songs_Musiciansid",
                 table: "Songs",
                 column: "Musiciansid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Songs_albumId",
+                name: "IX_Songs_albumIdForeignKey",
                 table: "Songs",
-                column: "albumId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Telephone_address",
-                table: "Telephone",
-                column: "address");
+                column: "albumIdForeignKey");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -334,13 +360,7 @@ namespace Notown.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Instruments");
-
-            migrationBuilder.DropTable(
                 name: "Songs");
-
-            migrationBuilder.DropTable(
-                name: "Telephone");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -352,10 +372,16 @@ namespace Notown.Migrations
                 name: "Album");
 
             migrationBuilder.DropTable(
+                name: "Musicians");
+
+            migrationBuilder.DropTable(
+                name: "Instruments");
+
+            migrationBuilder.DropTable(
                 name: "Place");
 
             migrationBuilder.DropTable(
-                name: "Musicians");
+                name: "Telephone");
         }
     }
 }

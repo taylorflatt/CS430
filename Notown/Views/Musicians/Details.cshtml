@@ -22,6 +22,24 @@
         <dd>
             @Html.DisplayFor(model => model.ssn)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Song)
+        </dt>
+        <dd>
+            @*@foreach (var song in ViewData["songForeignKey"] as IEnumerable<Musicians>)
+            {
+                <p>
+                    song
+                </p>
+            }*@
+
+            @foreach (var song in Model.Song)
+            {
+                <p>
+                    song
+                </p>
+            }
+        </dd>
     </dl>
 </div>
 <div>

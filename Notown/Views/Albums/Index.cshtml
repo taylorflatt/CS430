@@ -13,10 +13,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.producer)
+                @Html.DisplayNameFor(model => model.CopyrightDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CopyrightDate)
+                @Html.DisplayNameFor(model => model.producer)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.speed)
@@ -31,10 +31,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(model => item.producer)
+                @Html.DisplayFor(modelItem => item.CopyrightDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CopyrightDate)
+                @Html.DisplayFor(modelItem => item.producer)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.speed)

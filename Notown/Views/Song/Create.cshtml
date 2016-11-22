@@ -14,16 +14,13 @@
         <div class="form-group">
             <label asp-for="albumIdForeignKey" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="albumIdForeignKey" type="number" class="form-control" />
-                <span asp-validation-for="albumIdForeignKey" class="text-danger" />
-                @*<select asp-for="albumId" type="number" class ="form-control" asp-items="ViewBag.albumId"></select>*@
+                <select asp-for="albumIdForeignKey" class ="form-control" asp-items="ViewBag.albumIdForeignKey"></select>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="name" class="col-md-2 control-label"></label>
+            <label asp-for="musicianIdForeignKey" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="name" class="form-control" />
-                <span asp-validation-for="name" class="text-danger" />
+                <select asp-for="musicianIdForeignKey" class="form-control" asp-items="ViewBag.musicianIdForeignKey"></select>
             </div>
         </div>
         <div class="form-group">

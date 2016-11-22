@@ -34,30 +34,33 @@ namespace Notown.Data
             builder.Entity<Songs>().ToTable("Songs");
             builder.Entity<Telephone>().ToTable("Telephone");
 
+            // Each song can have only 1 album.
             builder.Entity<Songs>()
                 .HasOne(a => a.Album)
                 .WithMany(s => s.Songs)
                 .HasForeignKey(a => a.albumIdForeignKey);
 
+            // Each album can have many songs.
             builder.Entity<Album>()
                 .HasMany(s => s.Songs)
                 .WithOne(a => a.Album)
                 .HasPrincipalKey(s => s.albumID);
 
-
-
-            //builder.Entity<Album>()
-            //    .HasMany(s => s.Songs)
-            //    .WithOne(a => a.Album)
-            //    .HasForeignKey(s => s.albumId);
-
-            //builder.Entity<Songs>()
-            //    .HasOne(m => m.Musicians)
-            //    .WithMany();
-
             //builder.Entity<Musicians>()
-            //    .HasMany(a => a.Album)
-            //    .WithOne(m => m.Musicians);
+            //    .HasMany(s => s.Song)
+            //    .WithOne(m => m.Musicians)
+            //    .HasPrincipalKey(s => s.id);
+
+            // For each home, there can be many musicians.
+            builder.Entity<Musicians>()
+                .HasOne(h => h.Place)
+                .WithMany(m => m.Musicians)
+                .HasForeignKey(h => h.placeForeignKey);
+
+            // Every place has only 1 telephone number.
+            builder.Entity<Place>()
+                .HasOne(t => t.Telephone)
+                .WithOne(p => p.Place);
 
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
