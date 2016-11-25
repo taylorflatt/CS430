@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.25920.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Notown", "Notown\Notown.xproj", "{110FD840-96AD-4922-9166-4CAE46195F7E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6EE7ECE9-4D99-4C96-A979-3B122FDFF8FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notown", "src\Notown\Notown.csproj", "{889F7573-6550-46BE-831E-DC2953902AB0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,12 +13,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{110FD840-96AD-4922-9166-4CAE46195F7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{110FD840-96AD-4922-9166-4CAE46195F7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{110FD840-96AD-4922-9166-4CAE46195F7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{110FD840-96AD-4922-9166-4CAE46195F7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{889F7573-6550-46BE-831E-DC2953902AB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{889F7573-6550-46BE-831E-DC2953902AB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{889F7573-6550-46BE-831E-DC2953902AB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{889F7573-6550-46BE-831E-DC2953902AB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{889F7573-6550-46BE-831E-DC2953902AB0} = {6EE7ECE9-4D99-4C96-A979-3B122FDFF8FC}
 	EndGlobalSection
 EndGlobal
