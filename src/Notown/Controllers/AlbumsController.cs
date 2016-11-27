@@ -48,7 +48,18 @@ namespace Notown.Controllers
         // GET: Albums/Create
         public IActionResult Create()
         {
-            ViewData["MusicianID"] = new SelectList(_context.Musician, "ID", "Ssn");
+            List<SelectListItem> temp = new List<SelectListItem>();
+            foreach(var musician in _context.Musician)
+            {
+                temp.Add(new SelectListItem
+                {
+                    Text = musician.Name + " (" + musician.Ssn + ")",
+                    Value = Convert.ToString(musician.ID)
+                });
+            }
+
+            ViewData["MusicianID"] = temp;
+
             return View();
         }
 
