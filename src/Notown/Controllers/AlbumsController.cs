@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Notown.Data;
 using Notown.Models;
 using Notown.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Notown.Controllers
 {
@@ -93,6 +94,7 @@ namespace Notown.Controllers
         }
 
         // GET: Albums/Create
+        [Authorize]
         public IActionResult Create()
         {
             List<SelectListItem> temp = new List<SelectListItem>();
@@ -114,6 +116,7 @@ namespace Notown.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Name,Speed,CopyrightDate,MusicianID")] Album album)
         {
@@ -128,6 +131,7 @@ namespace Notown.Controllers
         }
 
         // GET: Albums/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -160,6 +164,7 @@ namespace Notown.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Speed,CopyrightDate,MusicianID")] Album album)
         {
@@ -193,6 +198,7 @@ namespace Notown.Controllers
         }
 
         // GET: Albums/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -214,6 +220,7 @@ namespace Notown.Controllers
 
         // POST: Albums/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

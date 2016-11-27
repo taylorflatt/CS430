@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Notown.Data;
 using Notown.Models;
 using Notown.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Notown.Controllers
 {
@@ -94,10 +95,11 @@ namespace Notown.Controllers
         }
 
         // GET: Songs/Create
+        [Authorize]
         public IActionResult Create()
         {
-            ViewData["AlbumID"] = new SelectList(_context.Album, "ID", "ID");
-            ViewData["MusicianID"] = new SelectList(_context.Musician, "ID", "ID");
+            ViewData["AlbumID"] = new SelectList(_context.Album, "ID", "Name");
+            ViewData["MusicianID"] = new SelectList(_context.Musician, "ID", "Name");
             return View();
         }
 
@@ -105,6 +107,7 @@ namespace Notown.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("SongID,Title,MusicianID,AlbumID")] Song song)
         {
@@ -114,12 +117,13 @@ namespace Notown.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["AlbumID"] = new SelectList(_context.Album, "ID", "ID", song.AlbumID);
-            ViewData["MusicianID"] = new SelectList(_context.Musician, "ID", "ID", song.MusicianID);
+            ViewData["AlbumID"] = new SelectList(_context.Album, "ID", "Name", song.AlbumID);
+            ViewData["MusicianID"] = new SelectList(_context.Musician, "ID", "Name", song.MusicianID);
             return View(song);
         }
 
         // GET: Songs/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -132,8 +136,8 @@ namespace Notown.Controllers
             {
                 return NotFound();
             }
-            ViewData["AlbumID"] = new SelectList(_context.Album, "ID", "ID", song.AlbumID);
-            ViewData["MusicianID"] = new SelectList(_context.Musician, "ID", "ID", song.MusicianID);
+            ViewData["AlbumID"] = new SelectList(_context.Album, "ID", "Name", song.AlbumID);
+            ViewData["MusicianID"] = new SelectList(_context.Musician, "ID", "Name", song.MusicianID);
             return View(song);
         }
 
@@ -141,6 +145,7 @@ namespace Notown.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("SongID,Title,MusicianID,AlbumID")] Song song)
         {
@@ -169,12 +174,13 @@ namespace Notown.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["AlbumID"] = new SelectList(_context.Album, "ID", "ID", song.AlbumID);
-            ViewData["MusicianSsn"] = new SelectList(_context.Musician, "ID", "ID", song.MusicianID);
+            ViewData["AlbumID"] = new SelectList(_context.Album, "ID", "Name", song.AlbumID);
+            ViewData["MusicianSsn"] = new SelectList(_context.Musician, "ID", "Name", song.MusicianID);
             return View(song);
         }
 
         // GET: Songs/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -195,6 +201,7 @@ namespace Notown.Controllers
         }
 
         // POST: Songs/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

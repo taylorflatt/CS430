@@ -25,13 +25,17 @@ namespace Notown.Models.AccountViewModels
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        [NotMapped]
-        [Required]
+        [Required(ErrorMessage = "The verification code is required to create an account.")]
         [Compare("_code", ErrorMessage = "The code entered is not correct.")]
         [Display(Name = "Verification Code")]
         public string Code { get; set; }
 
-        [NotMapped]
-        private const string _code = "cs430@SIUC";
+        public string _code
+        {
+            get
+            {
+                return "cs430@SIUC";
+            }
+        }
     }
 }

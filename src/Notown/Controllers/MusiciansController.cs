@@ -9,6 +9,7 @@ using Notown.Data;
 using Notown.Models;
 using Notown.Helpers;
 using Notown.Models.NotownViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Notown.Controllers
 {
@@ -97,35 +98,8 @@ namespace Notown.Controllers
             return View(musician);
         }
 
-        //// GET: Musicians/Create
-        //public IActionResult Create()
-        //{
-        //    List<SelectListItem> temp = new List<SelectListItem>();
-
-        //    // Default Option
-        //    temp.Add(new SelectListItem
-        //    {
-        //        Text = "Create New",
-        //        Value = "-1"
-        //    });
-
-        //    foreach (var instrument in _context.Instrument)
-        //    {
-        //        temp.Add(new SelectListItem
-        //        {
-        //            Text = instrument.Name,
-        //            Value = Convert.ToString(instrument.ID)
-        //        });
-        //    }
-
-        //    ViewData["InstrumentID"] = temp;
-
-        //    //ViewData["InstrumentID"] = new SelectList(_context.Instrument, "ID", "Name");
-        //    ViewData["PlaceID"] = new SelectList(_context.Place, "ID", "Address");
-        //    return View();
-        //}
-
         // GET: Musicians/Create
+        [Authorize]
         public IActionResult Create()
         {
             List<SelectListItem> instrumentList = new List<SelectListItem>();
@@ -172,6 +146,7 @@ namespace Notown.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Instrument, Musician, Place, Telephone")] CreateMusicianViewModel model)
         {
@@ -386,33 +361,8 @@ namespace Notown.Controllers
             }
         }
 
-        //// POST: Musicians/Create
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Ssn,Name,PlaceID,InstrumentID")] Musician musician)
-        //{
-        //    var uniqueSsn = from p in _context.Musician
-        //                    where p.Ssn == musician.Ssn
-        //                    select p.Name;
-
-        //    if (uniqueSsn.Any())
-        //        ModelState.AddModelError("", "That SSN (" + musician.Ssn + ") already belongs to " + uniqueSsn.First() + ". To assign this SSN to " 
-        //            + musician.Name + ", " + uniqueSsn.First() + " must first be deleted.");
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(musician);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction("Index");
-        //    }
-        //    ViewData["InstrumentID"] = new SelectList(_context.Instrument, "ID", "Name", musician.InstrumentID);
-        //    ViewData["PlaceID"] = new SelectList(_context.Place, "ID", "Address", musician.PlaceID);
-        //    return View(musician);
-        //}
-
         // GET: Musicians/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -434,6 +384,7 @@ namespace Notown.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Ssn,Name,PlaceID,InstrumentID")] Musician musician)
         {
@@ -465,6 +416,7 @@ namespace Notown.Controllers
         }
 
         // GET: Musicians/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -485,6 +437,7 @@ namespace Notown.Controllers
         }
 
         // POST: Musicians/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

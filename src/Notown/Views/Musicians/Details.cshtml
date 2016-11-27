@@ -10,12 +10,15 @@
     <h4>Musician</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Ssn)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Ssn)
-        </dd>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.Ssn)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Ssn)
+            </dd>
+        }
         <dt>
             @Html.DisplayNameFor(model => model.Name)
         </dt>
@@ -28,12 +31,15 @@
         <dd>
             @Html.DisplayFor(model => model.Instrument.Name)
         </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Place)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Place.Address)
-        </dd>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.Place)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Place.Address)
+            </dd>
+        }
         <dt>
             @Html.DisplayNameFor(model => model.Albums)
         </dt>
