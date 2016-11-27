@@ -7,7 +7,10 @@ namespace Notown.Models
     public class Place
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; }
+
+        [MaxLength(30, ErrorMessage = "The address cannot be longer than 30 characters.")]
         public string Address { get; set; }
 
         // Foreign Key

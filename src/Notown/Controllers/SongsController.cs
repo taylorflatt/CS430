@@ -50,7 +50,7 @@ namespace Notown.Controllers
         public IActionResult Create()
         {
             ViewData["AlbumID"] = new SelectList(_context.Album, "ID", "ID");
-            ViewData["MusicianSsn"] = new SelectList(_context.Musician, "Ssn", "Ssn");
+            ViewData["MusicianID"] = new SelectList(_context.Musician, "ID", "ID");
             return View();
         }
 
@@ -59,7 +59,7 @@ namespace Notown.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SongID,Title,MusicianSsn,AlbumID")] Song song)
+        public async Task<IActionResult> Create([Bind("SongID,Title,MusicianID,AlbumID")] Song song)
         {
             if (ModelState.IsValid)
             {
@@ -68,7 +68,7 @@ namespace Notown.Controllers
                 return RedirectToAction("Index");
             }
             ViewData["AlbumID"] = new SelectList(_context.Album, "ID", "ID", song.AlbumID);
-            ViewData["MusicianSsn"] = new SelectList(_context.Musician, "Ssn", "Ssn", song.MusicianSsn);
+            ViewData["MusicianID"] = new SelectList(_context.Musician, "ID", "ID", song.MusicianID);
             return View(song);
         }
 
@@ -86,7 +86,7 @@ namespace Notown.Controllers
                 return NotFound();
             }
             ViewData["AlbumID"] = new SelectList(_context.Album, "ID", "ID", song.AlbumID);
-            ViewData["MusicianSsn"] = new SelectList(_context.Musician, "Ssn", "Ssn", song.MusicianSsn);
+            ViewData["MusicianID"] = new SelectList(_context.Musician, "ID", "ID", song.MusicianID);
             return View(song);
         }
 
@@ -95,7 +95,7 @@ namespace Notown.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SongID,Title,MusicianSsn,AlbumID")] Song song)
+        public async Task<IActionResult> Edit(int id, [Bind("SongID,Title,MusicianID,AlbumID")] Song song)
         {
             if (id != song.SongID)
             {
@@ -123,7 +123,7 @@ namespace Notown.Controllers
                 return RedirectToAction("Index");
             }
             ViewData["AlbumID"] = new SelectList(_context.Album, "ID", "ID", song.AlbumID);
-            ViewData["MusicianSsn"] = new SelectList(_context.Musician, "Ssn", "Ssn", song.MusicianSsn);
+            ViewData["MusicianSsn"] = new SelectList(_context.Musician, "ID", "ID", song.MusicianID);
             return View(song);
         }
 

@@ -8,6 +8,7 @@ namespace Notown.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Display(Name = "Telephone Number")]
         public string Number { get; set; }
 
         public virtual Place Place { get; set; }

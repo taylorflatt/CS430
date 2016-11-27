@@ -48,7 +48,7 @@ namespace Notown.Controllers
         // GET: Albums/Create
         public IActionResult Create()
         {
-            ViewData["MusicianSsn"] = new SelectList(_context.Musician, "Ssn", "Ssn");
+            ViewData["MusicianID"] = new SelectList(_context.Musician, "ID", "Ssn");
             return View();
         }
 
@@ -57,7 +57,7 @@ namespace Notown.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name,Speed,CopyrightDate,MusicianSsn")] Album album)
+        public async Task<IActionResult> Create([Bind("ID,Name,Speed,CopyrightDate,MusicianID")] Album album)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +65,7 @@ namespace Notown.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["MusicianSsn"] = new SelectList(_context.Musician, "Ssn", "Ssn", album.MusicianSsn);
+            ViewData["MusicianSsn"] = new SelectList(_context.Musician, "ID", "Ssn", album.MusicianID);
             return View(album);
         }
 
@@ -82,7 +82,7 @@ namespace Notown.Controllers
             {
                 return NotFound();
             }
-            ViewData["MusicianSsn"] = new SelectList(_context.Musician, "Ssn", "Ssn", album.MusicianSsn);
+            ViewData["MusicianID"] = new SelectList(_context.Musician, "ID", "Ssn", album.MusicianID);
             return View(album);
         }
 
@@ -91,7 +91,7 @@ namespace Notown.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Speed,CopyrightDate,MusicianSsn")] Album album)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Speed,CopyrightDate,MusicianID")] Album album)
         {
             if (id != album.ID)
             {
@@ -118,7 +118,7 @@ namespace Notown.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["MusicianSsn"] = new SelectList(_context.Musician, "Ssn", "Ssn", album.MusicianSsn);
+            ViewData["MusicianSsn"] = new SelectList(_context.Musician, "ID", "Ssn", album.MusicianID);
             return View(album);
         }
 
@@ -132,6 +132,7 @@ namespace Notown.Controllers
 
             var album = await _context.Album
                 .Include(a => a.Musician)
+                .Include(s => s.Songs)
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (album == null)
             {
@@ -146,7 +147,18 @@ namespace Notown.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var album = await _context.Album.SingleOrDefaultAsync(m => m.ID == id);
+            var album = await _context.Album
+                .Include(s => s.Songs)
+                .SingleOrDefaultAsync(m => m.ID == id);
+
+            var songList = new List<Song>();
+
+            // Remove all the songs associated with the album.
+            foreach (var song in album.Songs)
+            {
+                _context.Song.Remove(song);
+            }
+
             _context.Album.Remove(album);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");

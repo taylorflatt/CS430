@@ -102,23 +102,23 @@ namespace Notown.Data
             {
                 new Musician
                 {
-                    Ssn = "12345678",
+                    Ssn = "123456789",
                     Name = "Billy",
-                    PlaceAddress = "123 Test Street",
+                    PlaceID = 1,
                     InstrumentID = 1
                 },
                 new Musician
                 {
-                    Ssn = "87654321",
+                    Ssn = "876543211",
                     Name = "Marge",
-                    PlaceAddress = "456 Adams Avenue",
+                    PlaceID = 2,
                     InstrumentID = 2
                 },
                 new Musician
                 {
-                    Ssn = "11345688",
+                    Ssn = "113456882",
                     Name = "John",
-                    PlaceAddress = "101 East Montvale Road",
+                    PlaceID = 3,
                     InstrumentID = 3
                 }
             };
@@ -138,7 +138,7 @@ namespace Notown.Data
                     Name = "Rocky Road",
                     CopyrightDate = DateTime.Parse("2005-09-01"),
                     Speed = 200,
-                    MusicianSsn = "12345678"
+                    MusicianID = 1
                 },
                 new Album
                 {
@@ -146,7 +146,7 @@ namespace Notown.Data
                     Name = "Purple Gorilla",
                     CopyrightDate = DateTime.Parse("2015-11-23"),
                     Speed = 250,
-                    MusicianSsn = "12345678"
+                    MusicianID = 1
                 },
                 new Album
                 {
@@ -154,7 +154,7 @@ namespace Notown.Data
                     Name = "Red Tape",
                     CopyrightDate = DateTime.Parse("2016-02-04"),
                     Speed = 200,
-                    MusicianSsn = "87654321"
+                    MusicianID = 2
                 }
             };
 
@@ -170,31 +170,31 @@ namespace Notown.Data
                 new Song
                 {
                     Title = "Yellow Banana",
-                    MusicianSsn = "12345678",
+                    MusicianID = 1,
                     AlbumID = 1
                 },
                 new Song
                 {
                     Title = "Purple Banana",
-                    MusicianSsn = "12345678",
+                    MusicianID = 1,
                     AlbumID = 1
                 },
                 new Song
                 {
                     Title = "Green Banana",
-                    MusicianSsn = "11345688",
+                    MusicianID = 2,
                     AlbumID = 1
                 },
                 new Song
                 {
                     Title = "Teal Banana",
-                    MusicianSsn = "11345688",
+                    MusicianID = 2,
                     AlbumID = 1
                 },
                 new Song
                 {
                     Title = "I like Red",
-                    MusicianSsn = "87654321",
+                    MusicianID = 3,
                     AlbumID = 3
                 }
             };

@@ -8,9 +8,10 @@ using Notown.Data;
 namespace Notown.Migrations
 {
     [DbContext(typeof(NotownContext))]
-    partial class NotownContextModelSnapshot : ModelSnapshot
+    [Migration("20161127040840_album_1")]
+    partial class album_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")

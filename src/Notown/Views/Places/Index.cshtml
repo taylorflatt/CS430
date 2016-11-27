@@ -1,10 +1,10 @@
-@model IEnumerable<Notown.Models.Musician>
+@model IEnumerable<Notown.Models.Place>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Places</h2>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -12,29 +12,25 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
             <th>
-                @Html.DisplayNameFor(model => model.Instrument)
+                @Html.DisplayNameFor(model => model.Address)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Place)
+                @Html.DisplayNameFor(model => model.Telephone)
             </th>
-            <th></th>
+            <th>
+                Options
+            </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.Address)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Instrument.ID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Place.Address)
+                @Html.DisplayFor(modelItem => item.Telephone.Number)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |

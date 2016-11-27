@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v1.0",
-    "signature": "34b2335abf3bf0bd37ec652f0179d912843f5c18"
+    "signature": "bd4a50209134a2d627b2b189f57d5207e51e6dff"
   },
   "compilationOptions": {
     "defines": [
@@ -46,7 +46,8 @@
           "Microsoft.NET.Sdk.Web": "1.0.0-alpha-20161104-2-112",
           "Microsoft.NETCore.App": "1.0.1",
           "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0",
-          "Microsoft.VisualStudio.Web.CodeGeneration.Design": "1.0.0-msbuild1-final"
+          "Microsoft.VisualStudio.Web.CodeGeneration.Design": "1.0.0-msbuild1-final",
+          "Microsoft.jQuery.Unobtrusive.Ajax": "3.2.3"
         },
         "runtime": {
           "Notown.dll": {}
@@ -55,6 +56,7 @@
           "Notown.dll": {}
         }
       },
+      "jquery/1.8.0": {},
       "microsoft.aspnetcore.antiforgery/1.0.1": {
         "dependencies": {
           "Microsoft.AspNetCore.DataProtection": "1.1.0",
@@ -1413,6 +1415,11 @@
         },
         "compile": {
           "lib/netstandard1.0/Microsoft.Extensions.WebEncoders.dll": {}
+        }
+      },
+      "microsoft.jquery.unobtrusive.ajax/3.2.3": {
+        "dependencies": {
+          "jQuery": "1.8.0"
         }
       },
       "microsoft.net.http.headers/1.1.0": {
@@ -3944,6 +3951,13 @@
       "serviceable": false,
       "sha512": ""
     },
+    "jquery/1.8.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-laDFQRJrIRHT0Z0GVYklMt3bE0iu0MZFJwHwg21kt3SHb7Bj8TdNiM3K+ZdK1DzB8ZxKy8z7NkJvwMas+dmHBw==",
+      "path": "jquery/1.8.0",
+      "hashPath": "jquery.1.8.0.nupkg.sha512"
+    },
     "microsoft.aspnetcore.antiforgery/1.0.1": {
       "type": "package",
       "serviceable": true,
@@ -4580,6 +4594,13 @@
       "sha512": "sha512-YnUfcLe/FYL3Mft5HPv7dSSKfZZCZwLG2GQfv3vuxdY4AbWOYLqq/3wIPCNIrgMXvzralWdkESNsb9iw5gKdpg==",
       "path": "microsoft.extensions.webencoders/1.1.0",
       "hashPath": "microsoft.extensions.webencoders.1.1.0.nupkg.sha512"
+    },
+    "microsoft.jquery.unobtrusive.ajax/3.2.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-bp8G1m66xaNE9RLm58qk7eXNDlH/yUBc/Dt8dMof/t0hBN3JpUQpPF7pavEVAauPCmcvM90pTrATG8nXbCi9yw==",
+      "path": "microsoft.jquery.unobtrusive.ajax/3.2.3",
+      "hashPath": "microsoft.jquery.unobtrusive.ajax.3.2.3.nupkg.sha512"
     },
     "microsoft.net.http.headers/1.1.0": {
       "type": "package",

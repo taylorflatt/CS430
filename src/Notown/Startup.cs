@@ -89,6 +89,11 @@ namespace Notown
                 routes.MapRoute(
                     name: "musicians",
                     template: "{controller=Musicians}/{action}/{uniqueID}");
+
+
+                routes.MapRoute(
+                    name: "places",
+                    template: "{controller=Places}/{action}/{uniqueID}");
             });
 
             DbInitializer.Initialize(context);

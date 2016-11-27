@@ -3,3 +3,9 @@ C:\School\CS 430 (Database Systems)\Notown\src\Notown\bin\Debug\netcoreapp1.0\No
 C:\School\CS 430 (Database Systems)\Notown\src\Notown\bin\Debug\netcoreapp1.0\Notown.pdb
 C:\School\CS 430 (Database Systems)\Notown\src\Notown\obj\Debug\netcoreapp1.0\Notown.dll
 C:\School\CS 430 (Database Systems)\Notown\src\Notown\obj\Debug\netcoreapp1.0\Notown.pdb
+C:\School\CS 430 (Database Systems)\Notown\CS430\src\Notown\obj\Debug\netcoreapp1.0\Notown.AssemblyInfo.cs
+C:\School\CS 430 (Database Systems)\Notown\CS430\src\Notown\bin\Debug\netcoreapp1.0\Notown.dll
+C:\School\CS 430 (Database Systems)\Notown\CS430\src\Notown\bin\Debug\netcoreapp1.0\Notown.pdb
+C:\School\CS 430 (Database Systems)\Notown\CS430\src\Notown\obj\Debug\netcoreapp1.0\Notown.dll
+C:\School\CS 430 (Database Systems)\Notown\CS430\src\Notown\obj\Debug\netcoreapp1.0\Notown.pdb
+C:\School\CS 430 (Database Systems)\Notown\CS430\src\Notown\obj\Debug\netcoreapp1.0\Notown.csprojResolveAssemblyReference.cache

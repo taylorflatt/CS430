@@ -10,16 +10,20 @@ namespace Notown.Models
     public class Album
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
+
+        [MaxLength(30, ErrorMessage = "The album name cannot be longer than 30 characters.")]
         public string Name { get; set; }
+
         public int Speed { get; set; }
 
         [DataType(DataType.Date)]
+        [Display(Name = "Copyright Date")]
         public DateTime CopyrightDate { get; set; }
 
         // Foreign Key
-        public string MusicianSsn { get; set; }
+        public int MusicianID { get; set; }
 
         public virtual Musician Musician { get; set; }      // Single Album Producer
         public virtual ICollection<Song> Songs { get; set; }

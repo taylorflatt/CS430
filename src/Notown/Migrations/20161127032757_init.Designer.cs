@@ -8,9 +8,10 @@ using Notown.Data;
 namespace Notown.Migrations
 {
     [DbContext(typeof(NotownContext))]
-    partial class NotownContextModelSnapshot : ModelSnapshot
+    [Migration("20161127032757_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")
@@ -18,8 +19,7 @@ namespace Notown.Migrations
 
             modelBuilder.Entity("Notown.Models.Album", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("ID");
 
                     b.Property<DateTime>("CopyrightDate");
 
@@ -159,12 +159,12 @@ namespace Notown.Migrations
                 {
                     b.HasOne("Notown.Models.Album", "Album")
                         .WithMany("Songs")
-                        .HasForeignKey("AlbumID")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("AlbumID");
 
                     b.HasOne("Notown.Models.Musician", "Musician")
                         .WithMany("Songs")
-                        .HasForeignKey("MusicianID");
+                        .HasForeignKey("MusicianID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
         }
     }

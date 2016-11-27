@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Notown.Data;
 using Notown.Models;
+using Notown.Models.NotownViewModels;
 
 namespace Notown.Controllers
 {
@@ -39,7 +40,7 @@ namespace Notown.Controllers
                 .Include(m => m.Place)
                 .Include(m => m.Songs)
                 .Include(m => m.Albums)
-                .SingleOrDefaultAsync(m => m.uniqueID == id);
+                .SingleOrDefaultAsync(m => m.ID == id);
 
             if (musician == null)
             {
@@ -52,8 +53,8 @@ namespace Notown.Controllers
         // GET: Musicians/Create
         public IActionResult Create()
         {
-            ViewData["InstrumentID"] = new SelectList(_context.Instrument, "ID", "ID");
-            ViewData["PlaceAddress"] = new SelectList(_context.Place, "Address", "Address");
+            ViewData["InstrumentID"] = new SelectList(_context.Instrument, "ID", "Name");
+            ViewData["PlaceID"] = new SelectList(_context.Place, "ID", "Address");
             return View();
         }
 
@@ -62,16 +63,24 @@ namespace Notown.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Ssn,Name,PlaceAddress,InstrumentID")] Musician musician)
+        public async Task<IActionResult> Create([Bind("Ssn,Name,PlaceID,InstrumentID")] Musician musician)
         {
+            var uniqueSsn = from p in _context.Musician
+                            where p.Ssn == musician.Ssn
+                            select p.Name;
+
+            if (uniqueSsn.Any())
+                ModelState.AddModelError("", "That SSN (" + musician.Ssn + ") already belongs to " + uniqueSsn.First() + ". To assign this SSN to " 
+                    + musician.Name + ", " + uniqueSsn.First() + " must first be deleted.");
+
             if (ModelState.IsValid)
             {
                 _context.Add(musician);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["InstrumentID"] = new SelectList(_context.Instrument, "ID", "ID", musician.InstrumentID);
-            ViewData["PlaceAddress"] = new SelectList(_context.Place, "Address", "Address", musician.PlaceAddress);
+            ViewData["InstrumentID"] = new SelectList(_context.Instrument, "ID", "Name", musician.InstrumentID);
+            ViewData["PlaceID"] = new SelectList(_context.Place, "ID", "Address", musician.PlaceID);
             return View(musician);
         }
 
@@ -83,13 +92,13 @@ namespace Notown.Controllers
                 return NotFound();
             }
 
-            var musician = await _context.Musician.SingleOrDefaultAsync(m => m.uniqueID == id);
+            var musician = await _context.Musician.SingleOrDefaultAsync(m => m.ID == id);
             if (musician == null)
             {
                 return NotFound();
             }
-            ViewData["InstrumentID"] = new SelectList(_context.Instrument, "ID", "ID", musician.InstrumentID);
-            ViewData["PlaceAddress"] = new SelectList(_context.Place, "Address", "Address", musician.PlaceAddress);
+            ViewData["InstrumentID"] = new SelectList(_context.Instrument, "ID", "Name", musician.InstrumentID);
+            ViewData["PlaceID"] = new SelectList(_context.Place, "ID", "Address", musician.PlaceID);
             return View(musician);
         }
 
@@ -98,35 +107,32 @@ namespace Notown.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id?, [Bind("Ssn,Name,PlaceAddress,InstrumentID")] Musician musician)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Ssn,Name,PlaceID,InstrumentID")] Musician musician)
         {
-            if (id != musician.uniqueID)
-            {
+            if (id != musician.ID)
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    _context.Entry(musician).State = EntityState.Modified;
                     _context.Update(musician);
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!MusicianExists(musician.Ssn))
-                    {
                         return NotFound();
-                    }
+
                     else
-                    {
                         throw;
-                    }
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["InstrumentID"] = new SelectList(_context.Instrument, "ID", "ID", musician.InstrumentID);
-            ViewData["PlaceAddress"] = new SelectList(_context.Place, "Address", "Address", musician.PlaceAddress);
+            ViewData["InstrumentID"] = new SelectList(_context.Instrument, "ID", "Name", musician.InstrumentID);
+            ViewData["PlaceID"] = new SelectList(_context.Place, "ID", "Address", musician.PlaceID);
             return View(musician);
         }
 
@@ -141,7 +147,7 @@ namespace Notown.Controllers
             var musician = await _context.Musician
                 .Include(m => m.Instrument)
                 .Include(m => m.Place)
-                .SingleOrDefaultAsync(m => m.uniqueID == id);
+                .SingleOrDefaultAsync(m => m.ID == id);
             if (musician == null)
             {
                 return NotFound();
@@ -153,9 +159,9 @@ namespace Notown.Controllers
         // POST: Musicians/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int? id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var musician = await _context.Musician.SingleOrDefaultAsync(m => m.uniqueID == id);
+            var musician = await _context.Musician.SingleOrDefaultAsync(m => m.ID == id);
             _context.Musician.Remove(musician);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");

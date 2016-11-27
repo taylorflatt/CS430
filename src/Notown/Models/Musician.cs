@@ -7,17 +7,19 @@ namespace Notown.Models
     public class Musician
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; }
+
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Display(Name="SSN")]
+        [StringLength(9, MinimumLength = 9, ErrorMessage = "The SSN must be exactly 9 digits.")]
         public string Ssn { get; set; }
 
-        // Used for the unique url link so the SSN isn't displayed.
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int uniqueID { get; set; }
-
+        [MaxLength(30, ErrorMessage = "The name cannot be longer than 30 characters.")]
         public string Name { get; set; }
 
         // Foreign Keys
-        public string PlaceAddress { get; set; }
+        public int PlaceID { get; set; }
         public int InstrumentID { get; set; }
 
         public virtual Place Place { get; set; }

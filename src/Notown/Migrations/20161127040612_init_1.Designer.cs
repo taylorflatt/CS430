@@ -8,8 +8,8 @@ using Notown.Data;
 namespace Notown.Migrations
 {
     [DbContext(typeof(NotownContext))]
-    [Migration("20161125034453_musician-id")]
-    partial class musicianid
+    [Migration("20161127040612_init_1")]
+    partial class init_1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,15 +23,16 @@ namespace Notown.Migrations
 
                     b.Property<DateTime>("CopyrightDate");
 
-                    b.Property<string>("MusicianSsn");
+                    b.Property<int>("MusicianID");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasMaxLength(30);
 
                     b.Property<int>("Speed");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("MusicianSsn");
+                    b.HasIndex("MusicianID");
 
                     b.ToTable("Album");
                 });
@@ -40,9 +41,11 @@ namespace Notown.Migrations
                 {
                     b.Property<int>("ID");
 
-                    b.Property<string>("Key");
+                    b.Property<string>("Key")
+                        .HasMaxLength(5);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasMaxLength(30);
 
                     b.HasKey("ID");
 
@@ -51,33 +54,42 @@ namespace Notown.Migrations
 
             modelBuilder.Entity("Notown.Models.Musician", b =>
                 {
-                    b.Property<string>("Ssn");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("InstrumentID");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasMaxLength(30);
 
-                    b.Property<string>("PlaceAddress");
+                    b.Property<int>("PlaceID");
 
-                    b.Property<int>("uniqueID")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Ssn")
+                        .HasMaxLength(9);
 
-                    b.HasKey("Ssn");
+                    b.HasKey("ID");
 
                     b.HasIndex("InstrumentID");
 
-                    b.HasIndex("PlaceAddress");
+                    b.HasIndex("PlaceID");
+
+                    b.HasIndex("Ssn")
+                        .IsUnique();
 
                     b.ToTable("Musician");
                 });
 
             modelBuilder.Entity("Notown.Models.Place", b =>
                 {
-                    b.Property<string>("Address");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(30);
 
                     b.Property<string>("TelephoneNumber");
 
-                    b.HasKey("Address");
+                    b.HasKey("ID");
 
                     b.HasIndex("TelephoneNumber")
                         .IsUnique();
@@ -90,17 +102,18 @@ namespace Notown.Migrations
                     b.Property<int>("SongID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("AlbumID");
+                    b.Property<int?>("AlbumID");
 
-                    b.Property<string>("MusicianSsn");
+                    b.Property<int>("MusicianID");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasMaxLength(30);
 
                     b.HasKey("SongID");
 
                     b.HasIndex("AlbumID");
 
-                    b.HasIndex("MusicianSsn");
+                    b.HasIndex("MusicianID");
 
                     b.ToTable("Song");
                 });
@@ -118,7 +131,8 @@ namespace Notown.Migrations
                 {
                     b.HasOne("Notown.Models.Musician", "Musician")
                         .WithMany("Albums")
-                        .HasForeignKey("MusicianSsn");
+                        .HasForeignKey("MusicianID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Notown.Models.Musician", b =>
@@ -130,7 +144,8 @@ namespace Notown.Migrations
 
                     b.HasOne("Notown.Models.Place", "Place")
                         .WithMany("Musicians")
-                        .HasForeignKey("PlaceAddress");
+                        .HasForeignKey("PlaceID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Notown.Models.Place", b =>
@@ -145,11 +160,11 @@ namespace Notown.Migrations
                     b.HasOne("Notown.Models.Album", "Album")
                         .WithMany("Songs")
                         .HasForeignKey("AlbumID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Notown.Models.Musician", "Musician")
                         .WithMany("Songs")
-                        .HasForeignKey("MusicianSsn");
+                        .HasForeignKey("MusicianID");
                 });
         }
     }
