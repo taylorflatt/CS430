@@ -5,11 +5,45 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Notown.Data;
 using Notown.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
+using Notown.Models;
+using Notown.Models.AccountViewModels;
+using Notown.Services;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Notown.Data
 {
     public class DbInitializer
     {
+        public static void InitializeUsers(ApplicationDbContext context)
+        {
+            context.Database.EnsureCreated();
+
+            if(context.Users.Any())
+            {
+                return;
+            }
+
+            IdentityRole adminRole = new IdentityRole();
+
+
+
+            //var userStore = new UserStore<IdentityUser>(context);
+            //var userManager = new UserManager<IdentityUser>(userStore);
+
+            //var roleStore = new RoleStore<IdentityRole>(context);
+            //var roleManager = new RoleManager<IdentityRole>(roleStore);
+        }
+
         public static void Initialize(NotownContext context)
         {
             context.Database.EnsureCreated();

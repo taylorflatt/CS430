@@ -60,11 +60,13 @@ namespace Notown.Migrations
                     b.Property<int>("InstrumentID");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(30);
 
                     b.Property<int>("PlaceID");
 
                     b.Property<string>("Ssn")
+                        .IsRequired()
                         .HasMaxLength(9);
 
                     b.HasKey("ID");
