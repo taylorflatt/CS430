@@ -1,27 +1,40 @@
-@model IEnumerable<Notown.Models.Song>
+@model Notown.Helpers.PaginatedList<Notown.Models.Song>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Songs</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" style="float:left;">Create New</a>
 </p>
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color" style="float: right;">
+        <p>
+            Search:
+            <input type="text" name="SearchString" value="@ViewData["currentFilter"]" placeholder="Title, Album, or Artist" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="Index">Back to List</a>
+
+        </p>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Title)
+                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.TitleSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Title</a>
                 </th>
             <th>
-                @Html.DisplayNameFor(model => model.Album)
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.AlbumSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Album</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Musician)
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.MusicianSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Musician</a>
             </th>
-            <th></th>
+            <th>
+                Options
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -31,10 +44,10 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Album.ID)
+                @Html.DisplayFor(modelItem => item.Album.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Musician.Ssn)
+                @Html.DisplayFor(modelItem => item.Musician.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.SongID">Edit</a> |
@@ -45,3 +58,23 @@
 }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-page="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @prevDisabled btn">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-page="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @nextDisabled btn">
+    Next
+</a>

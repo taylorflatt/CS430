@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Notown.Data;
 using Notown.Models;
+using Notown.Helpers;
 
 namespace Notown.Controllers
 {
@@ -20,10 +21,56 @@ namespace Notown.Controllers
         }
 
         // GET: Songs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var notownContext = _context.Song.Include(s => s.Album).Include(s => s.Musician);
-            return View(await notownContext.ToListAsync());
+            int pageSize = 5;
+
+            ViewData["CurrentSort"] = sortOrder;    // Allows us to keep sort order in paging links.
+            ViewData["TitleSortParm"] = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
+            ViewData["AlbumSortParm"] = sortOrder == "Album" ? "album_desc" : "Album";
+            ViewData["MusicianSortParm"] = sortOrder == "Musician" ? "musician_desc" : "Musician";
+
+            // Need to reset paging data because there is new information to display.
+            if (searchString != null)
+                page = 1;
+
+            else
+                searchString = currentFilter;
+
+            ViewData["CurrentFilter"] = searchString;   // Allows us to keep filters in paging links.
+
+            var songs = from a in _context.Song.Include(m => m.Musician).Include(a => a.Album)
+                         select a;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                songs = songs.Where(a => a.Title.Contains(searchString) ||
+                    a.Musician.Name.Contains(searchString) || a.Album.Name.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "title_desc":
+                    songs = songs.OrderByDescending(a => a.Title);
+                    break;
+                case "Album":
+                    songs = songs.OrderBy(a => a.Album.Name);
+                    break;
+                case "album_desc":
+                    songs = songs.OrderByDescending(a => a.Album.Name);
+                    break;
+                case "Musician":
+                    songs = songs.OrderBy(a => a.Musician.Name);
+                    break;
+                case "musician_desc":
+                    songs = songs.OrderByDescending(a => a.Musician.Name);
+                    break;
+                default:
+                    songs = songs.OrderBy(a => a.Title);
+                    break;
+            }
+
+            return View(await PaginatedList<Song>.CreateAsync(songs.AsNoTracking(), page ?? 1, pageSize));
         }
 
         // GET: Songs/Details/5
