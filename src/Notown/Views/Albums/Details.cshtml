@@ -38,13 +38,14 @@
             @Html.DisplayNameFor(model => model.Songs)
         </dt>
         <dd>
-            @if (Model.Songs != null)
+            @if (Model.Songs.Count() != 0)
             {
-                @foreach (var song in Model.Songs)
-                {
-                    @Html.DisplayFor(modelItem => song.Title)
-                    <br />
-                }
+                <ol style="padding-left: 20px;">
+                    @foreach (var song in Model.Songs)
+                    {
+                        <li>@Html.DisplayFor(modelItem => song.Title)</li>
+                    }
+                </ol>
             }
             else
             {

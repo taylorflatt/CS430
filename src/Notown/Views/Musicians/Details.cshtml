@@ -41,12 +41,22 @@
             </dd>
         }
         <dt>
-            @Html.DisplayNameFor(model => model.Albums)
+            Album List
         </dt>
         <dd>
             @foreach (var album in Model.Albums)
             {
                 @Html.DisplayFor(modelItem => album.Name)
+                <br />
+            }
+        </dd>
+        <dt>
+            Song List
+        </dt>
+        <dd>
+            @foreach (var song in Model.Songs)
+            {
+                @Html.DisplayFor(modelItem => song.Title)
                 <br />
             }
         </dd>

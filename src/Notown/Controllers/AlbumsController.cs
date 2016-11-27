@@ -86,6 +86,7 @@ namespace Notown.Controllers
 
             var album = await _context.Album
                 .Include(a => a.Musician)
+                .Include(s => s.Songs)
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (album == null)
             {

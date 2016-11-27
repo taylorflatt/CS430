@@ -429,6 +429,8 @@ namespace Notown.Controllers
             var musician = await _context.Musician
                 .Include(m => m.Instrument)
                 .Include(m => m.Place)
+                .Include(s => s.Songs)
+                .Include(a => a.Albums)
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (musician == null)
             {
@@ -439,13 +441,23 @@ namespace Notown.Controllers
         }
 
         // POST: Musicians/Delete/5
+        /// NOTE: Albums are already deleted when a musician is deleted, only songs need to be manually taken care of here.
         [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var musician = await _context.Musician.SingleOrDefaultAsync(m => m.ID == id);
+            var musician = await _context.Musician.Include(s => s.Songs).SingleOrDefaultAsync(m => m.ID == id);
             _context.Musician.Remove(musician);
+
+            var songList = new List<Song>();
+
+            // Remove all the songs associated with the album.
+            foreach (var song in musician.Songs)
+            {
+                _context.Song.Remove(song);
+            }
+
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
