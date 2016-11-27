@@ -23,6 +23,7 @@ namespace Notown.Controllers
         }
 
         // GET: Musicians
+        [AllowAnonymous]
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             int pageSize = 5;
@@ -76,6 +77,7 @@ namespace Notown.Controllers
         }
 
         // GET: Musicians/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

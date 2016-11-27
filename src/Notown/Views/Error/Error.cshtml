@@ -1,0 +1,26 @@
+@{
+    ViewData["Title"] = @Model + " Error";
+}
+
+<h1 class="text-danger">@Model Error.</h1>
+<h3 class="text-danger">An error occurred while processing your request.</h3>
+
+@ViewData["Message"]
+
+@if (@Model == 401)
+{
+    <br /><br />
+    <p>
+        If you are reading this message by mistake, then please
+        <a asp-area="" asp-controller="Home" asp-action="Contact"> contact an administrator</a>. Otherwise you need to
+        <a asp-area="" asp-controller="Account" asp-action="Login">Log in</a> so that you may access those functions.
+    </p>
+}
+
+@if (@Model == 404)
+{
+    <br /><br />
+    <p>
+        If you believe this to be a mistake, then please <a asp-area="" asp-controller="Home" asp-action="Contact"> contact an administrator</a>.
+    </p>
+}

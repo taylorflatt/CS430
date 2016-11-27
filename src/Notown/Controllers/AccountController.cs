@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Notown.Models;
 using Notown.Models.AccountViewModels;
 using Notown.Services;
+using Microsoft.AspNetCore.Http.Authentication;
 
 namespace Notown.Controllers
 {
