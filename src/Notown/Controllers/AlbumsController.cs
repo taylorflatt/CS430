@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Notown.Data;
 using Notown.Models;
+using Notown.Helpers;
 
 namespace Notown.Controllers
 {
@@ -20,10 +21,61 @@ namespace Notown.Controllers
         }
 
         // GET: Albums
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var notownContext = _context.Album.Include(a => a.Musician);
-            return View(await notownContext.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;    // Allows us to keep sort order in paging links.
+            ViewData["TitleSortParm"] = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
+            ViewData["ProducerSortParm"] = sortOrder == "Producer" ? "producer_desc" : "Producer";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+
+            // Need to reset paging data because there is new information to display.
+            if (searchString != null)
+                page = 1;
+
+            else
+                searchString = currentFilter;
+
+            ViewData["CurrentFilter"] = searchString;   // Allows us to keep filters in paging links.
+
+            var albums = from a in _context.Album.Include(a => a.Musician)
+                         select a;
+
+            if(!String.IsNullOrEmpty(searchString))
+            {
+                albums = albums.Where(a => a.Name.Contains(searchString) ||
+                    a.Musician.Name.Contains(searchString));
+            }
+
+            switch(sortOrder)
+            {
+                case "title_desc":
+                    albums = albums.OrderByDescending(a => a.Name);
+                    break;
+                case "Producer":
+                    albums = albums.OrderBy(a => a.Musician.Name);
+                    break;
+                case "producer_desc":
+                    albums = albums.OrderByDescending(a => a.Musician.Name);
+                    break;
+                case "Date":
+                    albums = albums.OrderBy(a => a.CopyrightDate);
+                    break;
+                case "date_desc":
+                    albums = albums.OrderByDescending(a => a.CopyrightDate);
+                    break;
+                default:
+                    albums = albums.OrderBy(a => a.Name);
+                    break;
+            }
+
+            int pageSize = 2;
+
+            return View(await PaginatedList<Album>.CreateAsync(albums.AsNoTracking(), page ?? 1, pageSize));
+
+            //return View(await albums.AsNoTracking().ToListAsync());
+
+            //var notownContext = _context.Album.Include(a => a.Musician);
+            //return View(await notownContext.ToListAsync());
         }
 
         // GET: Albums/Details/5
@@ -93,7 +145,19 @@ namespace Notown.Controllers
             {
                 return NotFound();
             }
-            ViewData["MusicianID"] = new SelectList(_context.Musician, "ID", "Ssn", album.MusicianID);
+
+            List<SelectListItem> temp = new List<SelectListItem>();
+            foreach (var musician in _context.Musician)
+            {
+                temp.Add(new SelectListItem
+                {
+                    Text = musician.Name + " (" + musician.Ssn + ")",
+                    Value = Convert.ToString(musician.ID)
+                });
+            }
+
+            ViewData["MusicianID"] = temp;
+
             return View(album);
         }
 

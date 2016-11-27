@@ -17,6 +17,12 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt>
+            Producer:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Musician.Name)
+        </dd>
+        <dt>
             @Html.DisplayNameFor(model => model.Speed)
         </dt>
         <dd>
@@ -29,10 +35,22 @@
             @Html.DisplayFor(model => model.CopyrightDate)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Musician)
+            @Html.DisplayNameFor(model => model.Songs)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Musician.Ssn)
+            @if (Model.Songs != null)
+            {
+                @foreach (var song in Model.Songs)
+                {
+                    @Html.DisplayFor(modelItem => song.Title)
+                    <br />
+                }
+            }
+            else
+            {
+                <p>No Songs have been added to this album yet. Try <a asp-area="" asp-controller="Songs" asp-action="Create">adding one</a>!</p>
+
+            }
         </dd>
     </dl>
 </div>

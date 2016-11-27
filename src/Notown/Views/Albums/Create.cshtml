@@ -19,6 +19,12 @@
             </div>
         </div>
         <div class="form-group">
+            <label asp-for="MusicianID" class="col-md-2 control-label">Musician</label>
+            <div class="col-md-10">
+                <select asp-for="MusicianID" class="form-control" asp-items="ViewBag.MusicianID"></select>
+            </div>
+        </div>
+        <div class="form-group">
             <label asp-for="Speed" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <input asp-for="Speed" class="form-control" />
@@ -30,12 +36,6 @@
             <div class="col-md-10">
                 <input asp-for="CopyrightDate" class="form-control" />
                 <span asp-validation-for="CopyrightDate" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="MusicianID" class="col-md-2 control-label">Musician</label>
-            <div class="col-md-10">
-                <select asp-for="MusicianID" class ="form-control" asp-items="ViewBag.MusicianID"></select>
             </div>
         </div>
         <div class="form-group">
