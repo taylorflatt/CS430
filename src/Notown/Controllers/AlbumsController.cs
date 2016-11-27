@@ -23,6 +23,8 @@ namespace Notown.Controllers
         // GET: Albums
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
+            int pageSize = 5;
+
             ViewData["CurrentSort"] = sortOrder;    // Allows us to keep sort order in paging links.
             ViewData["TitleSortParm"] = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
             ViewData["ProducerSortParm"] = sortOrder == "Producer" ? "producer_desc" : "Producer";
@@ -68,14 +70,7 @@ namespace Notown.Controllers
                     break;
             }
 
-            int pageSize = 2;
-
             return View(await PaginatedList<Album>.CreateAsync(albums.AsNoTracking(), page ?? 1, pageSize));
-
-            //return View(await albums.AsNoTracking().ToListAsync());
-
-            //var notownContext = _context.Album.Include(a => a.Musician);
-            //return View(await notownContext.ToListAsync());
         }
 
         // GET: Albums/Details/5

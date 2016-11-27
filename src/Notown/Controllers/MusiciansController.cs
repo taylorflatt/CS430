@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Notown.Data;
 using Notown.Models;
-using Notown.Models.NotownViewModels;
+using Notown.Helpers;
 
 namespace Notown.Controllers
 {
@@ -21,10 +21,56 @@ namespace Notown.Controllers
         }
 
         // GET: Musicians
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var notownContext = _context.Musician.Include(m => m.Instrument).Include(m => m.Place);
-            return View(await notownContext.ToListAsync());
+            int pageSize = 5;
+
+            ViewData["CurrentSort"] = sortOrder;    // Allows us to keep sort order in paging links.
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["InstrumentSortParm"] = sortOrder == "Instrument" ? "instrument_desc" : "Instrument";
+            ViewData["PlaceSortParm"] = sortOrder == "Place" ? "place_desc" : "Place";
+
+            // Need to reset paging data because there is new information to display.
+            if (searchString != null)
+                page = 1;
+
+            else
+                searchString = currentFilter;
+
+            ViewData["CurrentFilter"] = searchString;   // Allows us to keep filters in paging links.
+
+            var musicians = from a in _context.Musician.Include(a => a.Place).Include(i => i.Instrument)
+                         select a;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                musicians = musicians.Where(a => a.Name.Contains(searchString) ||
+                    a.Place.Address.Contains(searchString) || a.Instrument.Name.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    musicians = musicians.OrderByDescending(a => a.Name);
+                    break;
+                case "Instrument":
+                    musicians = musicians.OrderBy(a => a.Instrument.Name);
+                    break;
+                case "instrument_desc":
+                    musicians = musicians.OrderByDescending(a => a.Instrument.Name);
+                    break;
+                case "Place":
+                    musicians = musicians.OrderBy(a => a.Place.Address);
+                    break;
+                case "place_desc":
+                    musicians = musicians.OrderByDescending(a => a.Place.Address);
+                    break;
+                default:
+                    musicians = musicians.OrderBy(a => a.Name);
+                    break;
+            }
+
+            return View(await PaginatedList<Musician>.CreateAsync(musicians.AsNoTracking(), page ?? 1, pageSize));
         }
 
         // GET: Musicians/Details/5

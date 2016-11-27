@@ -1,27 +1,40 @@
-@model IEnumerable<Notown.Models.Musician>
+@model Notown.Helpers.PaginatedList<Notown.Models.Musician>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Musicians</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" style="float:left;">Create New</a>
 </p>
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color" style="float: right;">
+        <p>
+            Search:
+            <input type="text" name="SearchString" value="@ViewData["currentFilter"]" placeholder="Name, Instru, Address" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="Index">Back to List</a>
+
+        </p>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Name)
+                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.NameSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
                 </th>
             <th>
-                @Html.DisplayNameFor(model => model.Instrument)
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.InstrumentSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Instrument</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Place)
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.PlaceSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Address</a>
             </th>
-            <th></th>
+            <th>
+                Options
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -31,7 +44,7 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Instrument.ID)
+                @Html.DisplayFor(modelItem => item.Instrument.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Place.Address)
@@ -45,3 +58,23 @@
 }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-page="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @prevDisabled btn">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-page="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @nextDisabled btn">
+    Next
+</a>

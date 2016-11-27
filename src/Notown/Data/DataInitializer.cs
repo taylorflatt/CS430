@@ -75,7 +75,7 @@ namespace Notown.Data
                 {
                     ID = 1,
                     Key = "C",
-                    Name = "Pinao"
+                    Name = "Piano"
                 },
                 new Instrument
                 {
