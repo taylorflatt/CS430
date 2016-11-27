@@ -13,7 +13,8 @@ namespace Notown.Migrations
                 name: "Instrument",
                 columns: table => new
                 {
-                    ID = table.Column<int>(nullable: false),
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Key = table.Column<string>(maxLength: 5, nullable: true),
                     Name = table.Column<string>(maxLength: 30, nullable: true)
                 },
@@ -26,7 +27,7 @@ namespace Notown.Migrations
                 name: "Telephone",
                 columns: table => new
                 {
-                    Number = table.Column<string>(nullable: false)
+                    Number = table.Column<string>(maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -40,7 +41,7 @@ namespace Notown.Migrations
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Address = table.Column<string>(maxLength: 30, nullable: true),
-                    TelephoneNumber = table.Column<string>(nullable: true)
+                    TelephoneNumber = table.Column<string>(maxLength: 10, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -85,7 +86,8 @@ namespace Notown.Migrations
                 name: "Album",
                 columns: table => new
                 {
-                    ID = table.Column<int>(nullable: false),
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CopyrightDate = table.Column<DateTime>(nullable: false),
                     MusicianID = table.Column<int>(nullable: false),
                     Name = table.Column<string>(maxLength: 30, nullable: true),
@@ -120,13 +122,13 @@ namespace Notown.Migrations
                         column: x => x.AlbumID,
                         principalTable: "Album",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Song_Musician_MusicianID",
                         column: x => x.MusicianID,
                         principalTable: "Musician",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(

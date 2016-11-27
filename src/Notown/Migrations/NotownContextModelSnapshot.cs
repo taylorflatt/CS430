@@ -39,7 +39,8 @@ namespace Notown.Migrations
 
             modelBuilder.Entity("Notown.Models.Instrument", b =>
                 {
-                    b.Property<int>("ID");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Key")
                         .HasMaxLength(5);
@@ -60,13 +61,11 @@ namespace Notown.Migrations
                     b.Property<int>("InstrumentID");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(30);
 
                     b.Property<int>("PlaceID");
 
                     b.Property<string>("Ssn")
-                        .IsRequired()
                         .HasMaxLength(9);
 
                     b.HasKey("ID");
@@ -89,7 +88,8 @@ namespace Notown.Migrations
                     b.Property<string>("Address")
                         .HasMaxLength(30);
 
-                    b.Property<string>("TelephoneNumber");
+                    b.Property<string>("TelephoneNumber")
+                        .HasMaxLength(10);
 
                     b.HasKey("ID");
 
@@ -122,7 +122,8 @@ namespace Notown.Migrations
 
             modelBuilder.Entity("Notown.Models.Telephone", b =>
                 {
-                    b.Property<string>("Number");
+                    b.Property<string>("Number")
+                        .HasMaxLength(10);
 
                     b.HasKey("Number");
 

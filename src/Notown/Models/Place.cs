@@ -14,6 +14,7 @@ namespace Notown.Models
         public string Address { get; set; }
 
         // Foreign Key
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "The telephone number can only be 10 digits long.")]
         public string TelephoneNumber { get; set; }
 
         public virtual Telephone Telephone { get; set; }

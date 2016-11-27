@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,5 +24,14 @@ namespace Notown.Models.AccountViewModels
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [NotMapped]
+        [Required]
+        [Compare("_code", ErrorMessage = "The code entered is not correct.")]
+        [Display(Name = "Verification Code")]
+        public string Code { get; set; }
+
+        [NotMapped]
+        private const string _code = "cs430@SIUC";
     }
 }

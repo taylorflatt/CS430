@@ -107,19 +107,16 @@ namespace Notown.Data
             {
                 new Instrument
                 {
-                    ID = 1,
                     Key = "C",
                     Name = "Piano"
                 },
                 new Instrument
                 {
-                    ID = 2,
                     Key = "D",
                     Name = "Guitar"
                 },
                 new Instrument
                 {
-                    ID = 3,
                     Key = "C",
                     Name = "Violin"
                 }
@@ -168,7 +165,6 @@ namespace Notown.Data
             {
                 new Album
                 {
-                    ID = 1,
                     Name = "Rocky Road",
                     CopyrightDate = DateTime.Parse("2005-09-01"),
                     Speed = 200,
@@ -176,7 +172,6 @@ namespace Notown.Data
                 },
                 new Album
                 {
-                    ID = 2,
                     Name = "Purple Gorilla",
                     CopyrightDate = DateTime.Parse("2015-11-23"),
                     Speed = 250,
@@ -184,7 +179,6 @@ namespace Notown.Data
                 },
                 new Album
                 {
-                    ID = 3,
                     Name = "Red Tape",
                     CopyrightDate = DateTime.Parse("2016-02-04"),
                     Speed = 200,

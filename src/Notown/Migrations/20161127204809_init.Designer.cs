@@ -8,8 +8,8 @@ using Notown.Data;
 namespace Notown.Migrations
 {
     [DbContext(typeof(NotownContext))]
-    [Migration("20161127040612_init_1")]
-    partial class init_1
+    [Migration("20161127204809_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,7 +19,8 @@ namespace Notown.Migrations
 
             modelBuilder.Entity("Notown.Models.Album", b =>
                 {
-                    b.Property<int>("ID");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("CopyrightDate");
 
@@ -39,7 +40,8 @@ namespace Notown.Migrations
 
             modelBuilder.Entity("Notown.Models.Instrument", b =>
                 {
-                    b.Property<int>("ID");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Key")
                         .HasMaxLength(5);
@@ -87,7 +89,8 @@ namespace Notown.Migrations
                     b.Property<string>("Address")
                         .HasMaxLength(30);
 
-                    b.Property<string>("TelephoneNumber");
+                    b.Property<string>("TelephoneNumber")
+                        .HasMaxLength(10);
 
                     b.HasKey("ID");
 
@@ -120,7 +123,8 @@ namespace Notown.Migrations
 
             modelBuilder.Entity("Notown.Models.Telephone", b =>
                 {
-                    b.Property<string>("Number");
+                    b.Property<string>("Number")
+                        .HasMaxLength(10);
 
                     b.HasKey("Number");
 
