@@ -232,6 +232,7 @@ namespace Notown.Controllers
             }
 
             var place = await _context.Place
+                .Include(m => m.Musicians)
                 .Include(p => p.Telephone)
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (place == null)
@@ -247,7 +248,26 @@ namespace Notown.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var place = await _context.Place.Include(t => t.Telephone).SingleOrDefaultAsync(m => m.ID == id);
+            var place = await _context.Place.Include(t => t.Telephone).Include(m => m.Musicians).SingleOrDefaultAsync(m => m.ID == id);
+
+            // The place has musicians, so we need to remove them as well. This will also remove the Albums and Songs 
+            // associated with the musician as well.
+            if (place.Musicians.Count() > 0)
+            {
+                foreach (var musician in place.Musicians)
+                {
+                    var tempMusician = await _context.Musician.Include(s => s.Songs).SingleOrDefaultAsync(m => m.ID == musician.ID);
+                    var songList = new List<Song>();
+
+                    // Remove all the songs associated with the musician.
+                    foreach (var song in tempMusician.Songs)
+                    {
+                        _context.Song.Remove(song);
+                    }
+                    _context.Musician.Remove(tempMusician);
+                }
+                _context.SaveChanges();
+            }
             _context.Place.Remove(place);
             _context.SaveChanges();
 

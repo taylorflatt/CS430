@@ -1,24 +1,39 @@
-@model IEnumerable<Notown.Models.Instrument>
+@model Notown.Helpers.PaginatedList<Notown.Models.Instrument>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Instruments";
 }
 
-<h2>Index</h2>
+<h2>Instruments</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" style="float:left;">Create New</a>
 </p>
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color" style="float: right;">
+        <p>
+            Search:
+            <input type="text" name="SearchString" value="@ViewData["currentFilter"]" placeholder="Address or Number" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="Index">Back to List</a>
+        </p>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Name)
+                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.NameSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Key)
+                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.KeySortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Key</a>
                 </th>
-            <th></th>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <th>
+                    Options
+                </th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -30,12 +45,37 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Key)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            }
         </tr>
 }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-page="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @prevDisabled btn">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-page="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @nextDisabled btn">
+    Next
+</a>
+
+@Model.PageIndex  <text>of </text> @Model.TotalPages <text> Pages</text>

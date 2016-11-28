@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Notown.Data;
 using Notown.Models;
 using Microsoft.AspNetCore.Authorization;
+using Notown.Helpers;
 
 namespace Notown.Controllers
 {
@@ -22,9 +23,49 @@ namespace Notown.Controllers
         }
 
         // GET: Instruments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            return View(await _context.Instrument.ToListAsync());
+            int pageSize = 5;
+
+            ViewData["CurrentSort"] = sortOrder;    // Allows us to keep sort order in paging links.
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["KeySortParm"] = sortOrder == "Key" ? "key_desc" : "Key";
+
+            // Need to reset paging data because there is new information to display.
+            if (searchString != null)
+                page = 1;
+
+            else
+                searchString = currentFilter;
+
+            ViewData["CurrentFilter"] = searchString;   // Allows us to keep filters in paging links.
+
+            var instruments = from a in _context.Instrument
+                            select a;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                instruments = instruments.Where(a => a.Name.Contains(searchString) ||
+                    a.Key.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    instruments = instruments.OrderByDescending(a => a.Name);
+                    break;
+                case "Key":
+                    instruments = instruments.OrderBy(a => a.Key);
+                    break;
+                case "key_desc":
+                    instruments = instruments.OrderByDescending(a => a.Key);
+                    break;
+                default:
+                    instruments = instruments.OrderBy(a => a.Name);
+                    break;
+            }
+
+            return View(await PaginatedList<Instrument>.CreateAsync(instruments.AsNoTracking(), page ?? 1, pageSize));
         }
 
         // GET: Instruments/Details/5
@@ -36,6 +77,7 @@ namespace Notown.Controllers
             }
 
             var instrument = await _context.Instrument
+                .Include(m => m.Musicians)
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (instrument == null)
             {
@@ -95,6 +137,13 @@ namespace Notown.Controllers
                 return NotFound();
             }
 
+            var uniqueName = from n in _context.Instrument
+                             where n.Name.Equals(instrument.Name)
+                             select 1;
+
+            if(uniqueName.Any())
+                ModelState.AddModelError("", "An instrument with that name already exists!");
+
             if (ModelState.IsValid)
             {
                 try
@@ -115,6 +164,7 @@ namespace Notown.Controllers
                 }
                 return RedirectToAction("Index");
             }
+
             return View(instrument);
         }
 
@@ -127,6 +177,7 @@ namespace Notown.Controllers
             }
 
             var instrument = await _context.Instrument
+                .Include(m => m.Musicians)
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (instrument == null)
             {

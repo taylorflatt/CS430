@@ -23,8 +23,28 @@
         <dd>
             @Html.DisplayFor(model => model.Telephone.Number)
         </dd>
+        <dt>
+            Occupants
+        </dt>
+        <dd>
+            @if (Model.Musicians.Count() != 0)
+            {
+                <ol>
+                    @foreach (var musician in Model.Musicians)
+                    {
+                        <li>@Html.DisplayFor(modelItem => musician.Name)</li>
+                    }
+                </ol>
+            }
+            else
+            {
+                <p>No musicians currently live here!</p>
+            }
+        </dd>
     </dl>
-    
+    <p class="text-danger">
+        Note, this will delete <strong><u>ALL</u></strong> musicians associated with this place (<u>including their songs and albums</u>) as well as the telephone number!
+    </p>
     <form asp-action="Delete">
         <div class="form-actions no-color">
             <input type="submit" value="Delete" class="btn btn-default" /> |
