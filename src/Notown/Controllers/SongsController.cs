@@ -113,6 +113,15 @@ namespace Notown.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("SongID,Title,MusicianID,AlbumID")] Song song)
         {
+            foreach(var dbSong in _context.Song)
+            {
+                if(dbSong.Title.Equals(song.Title)
+                    && dbSong.MusicianID.Equals(song.MusicianID)
+                    && dbSong.AlbumID.Equals(song.AlbumID))
+                {
+                    ModelState.AddModelError("", song.Title + " already exists on that album!");
+                }
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(song);

@@ -43,7 +43,7 @@
                 <ol style="padding-left: 20px;">
                     @foreach (var song in Model.Songs)
                     {
-                        <li>@Html.DisplayFor(modelItem => song.Title)</li>
+                        <li><a asp-action="Details" asp-controller="Songs" asp-route-id="@song.SongID">@Html.DisplayFor(modelItem => song.Title)</a></li>
                     }
                 </ol>
             }
