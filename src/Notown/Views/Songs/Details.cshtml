@@ -20,7 +20,7 @@
             @Html.DisplayNameFor(model => model.Album)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Album.Name) <text> - (</text><a asp-action="Details" asp-controller="Albums" asp-route-id="@Model.AlbumID">See Album</a><text>)</text>
+            <a asp-action="Details" asp-controller="Albums" asp-route-id="@Model.AlbumID">@Html.DisplayFor(model => model.Album.Name)</a>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Musician)

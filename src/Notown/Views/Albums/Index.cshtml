@@ -23,24 +23,21 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.TitleSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Title</a>
-                </th>
-                <th>
-                    Speed
-                </th>
-                <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.DateSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Copyright Date</a>
-                </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.TitleSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Title</a>
+            </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewBag.ProducerSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Producer</a>
             </th>
-            @if (User.Identity.IsAuthenticated)
-            {
-                <th>
-                    Options
-                </th>
-            }
+            <th>
+                Speed
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.DateSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Copyright Date</a>
+            </th>
+            <th>
+                Options
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -50,22 +47,26 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Musician.Name)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Speed)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CopyrightDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Musician.Name)
-            </td>
-            @if (User.Identity.IsAuthenticated)
-            {
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> <text>|</text>
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> <text>|</text>
                     <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-                </td>
-            }
+                }
+                else
+                {
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a>
+                }
+            </td>
         </tr>
 }
     </tbody>

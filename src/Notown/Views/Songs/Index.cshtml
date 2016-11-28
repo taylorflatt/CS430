@@ -32,12 +32,9 @@
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewBag.MusicianSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Musician</a>
             </th>
-            @if (User.Identity.IsAuthenticated)
-            {
-                <th>
-                    Options
-                </th>
-            }
+            <th>
+                Options
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -52,14 +49,18 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Musician.Name)
             </td>
-            @if (User.Identity.IsAuthenticated)
-            {
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.SongID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.SongID">Details</a> |
+            <td>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.SongID">Edit</a> <text>|</text>
+                    <a asp-action="Details" asp-route-id="@item.SongID">Details</a> <text>|</text>
                     <a asp-action="Delete" asp-route-id="@item.SongID">Delete</a>
-                </td>
-            }
+                }
+                else
+                {
+                    <a asp-action="Details" asp-route-id="@item.SongID">Details</a>
+                }
+            </td>
         </tr>
 }
     </tbody>

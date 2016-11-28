@@ -32,12 +32,9 @@
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewBag.PlaceSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Address</a>
             </th>
-            @if (User.Identity.IsAuthenticated)
-            {
-                <th>
-                    Options
-                </th>
-            }
+            <th>
+                Options
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -52,14 +49,18 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Place.Address)
             </td>
-            @if (User.Identity.IsAuthenticated)
-            {
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+            <td>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> <text>|</text>
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> <text>|</text>
                     <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-                </td>
-            }
+                }
+                else
+                {
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a>
+                }
+            </td>
         </tr>
 }
     </tbody>

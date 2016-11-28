@@ -20,7 +20,7 @@
             Producer:
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Musician.Name)
+            <a asp-action="Details" asp-controller="Musicians" asp-route-id="@Model.MusicianID">@Html.DisplayFor(model => model.Musician.Name)</a>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Speed)

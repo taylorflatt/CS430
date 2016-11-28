@@ -46,7 +46,7 @@
         <dd>
             @foreach (var album in Model.Albums)
             {
-                @Html.DisplayFor(modelItem => album.Name)
+                <a asp-action="Details" asp-controller="Albums" asp-route-id="@album.ID">@Html.DisplayFor(modelItem => album.Name)</a>
                 <br />
             }
         </dd>
@@ -61,7 +61,8 @@
             {
                 if (song.AlbumID != null)
                 {
-                    @Html.DisplayFor(modelItem => song.Album.Name) <text> - </text> @Html.DisplayFor(modelItem => song.Title);
+                    @Html.DisplayFor(modelItem => song.Album.Name)
+                    <text> - </text> <a asp-action="Details" asp-controller="Songs" asp-route-id="@song.SongID">@Html.DisplayFor(modelItem => song.Title)</a>;
 
                 }
                 else
