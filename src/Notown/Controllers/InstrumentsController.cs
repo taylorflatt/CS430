@@ -192,7 +192,26 @@ namespace Notown.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var instrument = await _context.Instrument.SingleOrDefaultAsync(m => m.ID == id);
+            var instrument = await _context.Instrument.Include(m => m.Musicians).SingleOrDefaultAsync(m => m.ID == id);
+
+            if (instrument.Musicians.Count() > 0)
+            {
+                foreach (var musician in instrument.Musicians)
+                {
+                    var tempMusician = await _context.Musician.Include(s => s.Songs).SingleOrDefaultAsync(m => m.ID == musician.ID);
+                    var songList = new List<Song>();
+
+                    // Remove all the songs associated with the musician.
+                    foreach (var song in tempMusician.Songs)
+                    {
+                        _context.Song.Remove(song);
+                    }
+                    _context.Musician.Remove(tempMusician);
+                }
+                _context.SaveChanges();
+            }
+
+
             _context.Instrument.Remove(instrument);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
