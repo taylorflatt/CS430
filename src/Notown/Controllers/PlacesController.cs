@@ -87,7 +87,8 @@ namespace Notown.Controllers
             temp.Add(new SelectListItem
             {
                 Text = "No Musician",
-                Value = "-1"
+                Value = "-1",
+                Selected = true
             });
 
             foreach (var musician in _context.Musician)
@@ -112,6 +113,9 @@ namespace Notown.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Place, MusicianIDs")] CreatePlaceViewModel model)
         {
+            if (model.MusicianIDs == null)
+                ModelState.AddModelError("MusicianIDs", "You must select at least one option! If you want 'No Musicians', select that option.");
+
             var uniqueAddress = from a in _context.Place
                                 where a.Address == model.Place.Address
                                 select a.Address;
@@ -121,16 +125,16 @@ namespace Notown.Controllers
                                   select t.Place.Address;
 
             if (uniqueAddress.Any())
-                ModelState.AddModelError("", "That address already exists.");
+                ModelState.AddModelError("Place.Address", "That address already exists.");
 
             if (uniqueTelephone.Any())
-                ModelState.AddModelError("", "That telephone number already belongs to " + uniqueTelephone.First() + ". To assign number: " + model.Place.TelephoneNumber
+                ModelState.AddModelError("Place.TelephoneNumber", "That telephone number already belongs to " + uniqueTelephone.First() + ". To assign number: " + model.Place.TelephoneNumber
                     + " to this address, the " + uniqueTelephone.First() + " must first be deleted.");
 
             // They selected 'No Musician' AND a musician. Nonsensical choice.
-            if (model.MusicianIDs.Contains(-1) && model.MusicianIDs.Count() > 1)
+            if (model.MusicianIDs != null && model.MusicianIDs.Contains(-1) && model.MusicianIDs.Count() > 1)
             {
-                ModelState.AddModelError("", "You selected 'No Musician' but also selected at least another musician as well. If you don't wish to add musicians to this" +
+                ModelState.AddModelError("MusicianIDs", "You selected 'No Musician' but also selected at least another musician as well. If you don't wish to add musicians to this" +
                     " home, then only select the 'No Musician' option. Otherwise, unselect 'No Musician' and choose as many musicians who will be assigned to this" +
                     " home.");
             }
@@ -190,7 +194,8 @@ namespace Notown.Controllers
             temp.Add(new SelectListItem
             {
                 Text = "No Musician",
-                Value = "-1"
+                Value = "-1",
+                Selected = true
             });
 
             foreach (var musician in _context.Musician)
@@ -281,10 +286,43 @@ namespace Notown.Controllers
                     else
                         throw;
                 }
+
                 return RedirectToAction("Index");
             }
 
-            ViewData["TelephoneNumber"] = new SelectList(_context.Telephone, "Number", "Number", place.TelephoneNumber);
+            List<SelectListItem> temp = new List<SelectListItem>();
+
+            temp.Add(new SelectListItem
+            {
+                Text = place.TelephoneNumber + " - (Current)",
+                Value = Convert.ToString(place.TelephoneNumber)
+            });
+
+            foreach (var number in _context.Telephone)
+            {
+                bool add = true;
+
+                foreach (var tempPlace in _context.Place)
+                {
+                    // If a we find a number associated with another place, stop and don't add.
+                    if (tempPlace.TelephoneNumber == number.Number)
+                    {
+                        add = false;
+                        break;
+                    }
+                }
+
+                if (add)
+                {
+                    temp.Add(new SelectListItem
+                    {
+                        Text = number.Number,
+                        Value = Convert.ToString(number.Number)
+                    });
+                }
+            }
+
+            ViewData["TelephoneNumber"] = temp;
 
             return View(place);
         }

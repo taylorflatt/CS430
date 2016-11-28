@@ -11,9 +11,11 @@ namespace Notown.Models
         [Display(Name = "Instrument ID")]
         public int ID { get; set; }
 
+        [Required]
         [MaxLength(30, ErrorMessage = "The instrument name cannot be longer than 30 characters.")]
         public string Name { get; set; }
 
+        [Required]
         [Display(Name = "Musical Key")]
         [MaxLength(5, ErrorMessage = "The Key cannot be longer than 5 characters.")]
         public string Key { get; set; }

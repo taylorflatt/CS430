@@ -26,6 +26,7 @@ namespace Notown.Migrations
                     b.Property<int>("MusicianID");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(30);
 
                     b.Property<int>("Speed");
@@ -43,9 +44,11 @@ namespace Notown.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Key")
+                        .IsRequired()
                         .HasMaxLength(5);
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(30);
 
                     b.HasKey("ID");
@@ -61,11 +64,13 @@ namespace Notown.Migrations
                     b.Property<int>("InstrumentID");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(30);
 
                     b.Property<int>("PlaceID");
 
                     b.Property<string>("Ssn")
+                        .IsRequired()
                         .HasMaxLength(9);
 
                     b.HasKey("ID");
@@ -86,9 +91,11 @@ namespace Notown.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasMaxLength(30);
 
                     b.Property<string>("TelephoneNumber")
+                        .IsRequired()
                         .HasMaxLength(10);
 
                     b.HasKey("ID");
@@ -104,11 +111,13 @@ namespace Notown.Migrations
                     b.Property<int>("SongID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("AlbumID");
+                    b.Property<int?>("AlbumID")
+                        .IsRequired();
 
                     b.Property<int>("MusicianID");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasMaxLength(30);
 
                     b.HasKey("SongID");
@@ -155,7 +164,8 @@ namespace Notown.Migrations
                 {
                     b.HasOne("Notown.Models.Telephone", "Telephone")
                         .WithOne("Place")
-                        .HasForeignKey("Notown.Models.Place", "TelephoneNumber");
+                        .HasForeignKey("Notown.Models.Place", "TelephoneNumber")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Notown.Models.Song", b =>

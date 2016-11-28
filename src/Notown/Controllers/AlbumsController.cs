@@ -172,6 +172,14 @@ namespace Notown.Controllers
             if (id != album.ID)
                 return NotFound();
 
+            var uniqueName = from n in _context.Album
+                             where n.Name.Equals(album.Name)
+                             select n.ID;
+
+            // If there is an instrument and it isn't the same instrument.
+            if (!uniqueName.FirstOrDefault().Equals(album.ID) && uniqueName.Count() > 0)
+                ModelState.AddModelError("", "An album with that name already exists!");
+
             if (ModelState.IsValid)
             {
                 try
@@ -190,7 +198,18 @@ namespace Notown.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewData["MusicianSsn"] = new SelectList(_context.Musician, "ID", "Ssn", album.MusicianID);
+            List<SelectListItem> temp = new List<SelectListItem>();
+
+            foreach (var musician in _context.Musician)
+            {
+                temp.Add(new SelectListItem
+                {
+                    Text = musician.Name + " (" + musician.Ssn + ")",
+                    Value = Convert.ToString(musician.ID)
+                });
+            }
+
+            ViewData["MusicianID"] = temp;
 
             return View(album);
         }

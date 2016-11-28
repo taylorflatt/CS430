@@ -7,60 +7,70 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="~/lib/jquery/dist/jquery.js" type="text/javascript"></script>
 <script src="~/lib/jquery-masked/jquery-maskedinput.js" type="text/javascript"></script>
+<script src="~/js/site.js" type="text/javascript"></script>
 
 <script>
-        function ShowInstrumentCreation(element) {
+    function ShowInstrumentCreation(element) {
 
+        if (element != "on_page_load") {
             var text = element.options[element.selectedIndex].text;
-            if (text == "Create New...") {
-                $("#createInstrument").append(
-                        "<div class='form-group'> "
-                    +   "<label asp-for='Instrument.Name' class='col-md-2 control-label'> New Name</label> "
-                    +   "<div class='col-md-10' > "
-                    +       "<input class='form-control' placeholder='New Instrument Name' type='text' data-val='true' data-val-maxlength='The instrument name cannot be longer than 30 characters.' data-val-maxlength-max='30' id='Instrument_Name' name='Instrument.Name' value=''>"
-                    +       "<span class='text-danger field-validation-valid' data-valmsg-for='Instrument.Name' data-valmsg-replace='true'></span>"
-                    + "</div>"
-                    + "</div>"
-
-                    + "<div class='form-group'> "
-                    +   "<label asp-for='Instrument.Key' class='col-md-2 control-label'> New Key</label>"
-                    +   "<div class='col-md-10'> "
-                    +       "<input class='form-control' type='text' data-val='true' data-val-maxlength='The instrument key cannot be longer than 5 characters.' data-val-maxlength-max='5' id='Instrument_Key' name='Instrument.Key' value=''>"
-                    +       "<span class='text-danger field-validation-valid' data-valmsg-for='Instrument.Key' data-valmsg-replace='true'></span>"
-                    +   "</div>" 
-                    + "</div>");
-                }
-            else {
-                $("#createInstrument").empty();
-            }
         }
+        else
+            var text = "Create New...";     // This will only be run/set on page load so the HTML is placed on the page.
 
-        function ShowPlaceCreation(element) {
+        if (text == "Create New...") {
+            $("#createInstrument").append(
+                    "<div class='form-group'> "
+                +   "<label asp-for='Instrument.Name' class='col-md-2 control-label'> New Name</label> "
+                +   "<div class='col-md-10' > "
+                +       "<input class='form-control' placeholder='New Instrument Name' type='text' data-val='true' data-val-maxlength='The instrument name cannot be longer than 30 characters.' data-val-maxlength-max='30' id='Instrument_Name' name='Instrument.Name' value=''>"
+                +       "<span class='text-danger field-validation-valid' data-valmsg-for='Instrument.Name' data-valmsg-replace='true'></span>"
+                + "</div>"
+                + "</div>"
 
+                + "<div class='form-group'> "
+                +   "<label asp-for='Instrument.Key' class='col-md-2 control-label'> New Key</label>"
+                +   "<div class='col-md-10'> "
+                +       "<input class='form-control' placeholder='New Instrument Key' type='text' data-val='true' data-val-maxlength='The instrument key cannot be longer than 5 characters.' data-val-maxlength-max='5' id='Instrument_Key' name='Instrument.Key' value=''>"
+                +       "<span class='text-danger field-validation-valid' data-valmsg-for='Instrument.Key' data-valmsg-replace='true'></span>"
+                +   "</div>" 
+                + "</div>");
+            }
+        else {
+            $("#createInstrument").empty();
+        }
+    }
+
+    function ShowPlaceCreation(element) {
+
+        if (element != "on_page_load") {
             var text = element.options[element.selectedIndex].text;
-            if (text == "Create New...") {
-                $("#createPlace").append(
-                      "<div class='form-group'>"
-                    +   "<label asp-for='Place.Address' class='col-md-2 control-label'> New Address</label>"
-                    +   "<div class='col-md-10' > "
-                    +       "<input class='form-control' placeholder='New Address' type='text' data-val='true' data-val-maxlength='The address cannot be longer than 30 characters.' data-val-maxlength-max='30' id='Place_Address' name='Place.Address' value=''>"
-                    +       "<span class='text-danger field-validation-valid' data-valmsg-for='Place.Address' data-valmsg-replace='true'></span>"
-                    +   "</div> "
-                    + "</div> "
-
-                    + "<div class='form-group'> "
-                    +   "<label asp-for='Place.TelephoneNumber' class='col-md-2 control-label'> New Number</label> "
-                    + "<div class='col-md-10' > "
-                    +       "<input class='form-control' placeholder='New Number' type='text' data-val='true' data-val-maxlength='The phone number cannot be longer than 9 characters.' data-val-maxlength-max='9' id='Place_TelephoneNumber' name='Place.TelephoneNumber' value=''>"
-                    +       "<span class='text-danger field-validation-valid' data-valmsg-for='Place.TelephoneNumber' data-valmsg-replace='true'></span>"
-                    +   "</div>"
-                    + "</div>");
-             }
-            else {
-                $("#createPlace").empty();
-            }
         }
+        else
+            var text = "Create New...";     // This will only be run/set on page load so the HTML is placed on the page.
 
+        if (text == "Create New...") {
+            $("#createPlace").append(
+                    "<div class='form-group'>"
+                +   "<label asp-for='Place.Address' class='col-md-2 control-label'> New Address</label>"
+                +   "<div class='col-md-10' > "
+                +       "<input class='form-control' placeholder='New Address' type='text' data-val='true' data-val-maxlength='The address cannot be longer than 30 characters.' data-val-maxlength-max='30' id='Place_Address' name='Place.Address' value=''>"
+                +       "<span class='text-danger field-validation-valid' data-valmsg-for='Place.Address' data-valmsg-replace='true'></span>"
+                +   "</div> "
+                + "</div> "
+
+                + "<div class='form-group'> "
+                +   "<label asp-for='Place.TelephoneNumber' class='col-md-2 control-label'> New Number</label> "
+                + "<div class='col-md-10' > "
+                +       "<input class='form-control' placeholder='New Number' type='text' data-val='true' data-val-maxlength='The phone number cannot be longer than 10 characters.' data-val-maxlength-max='10' id='Place_TelephoneNumber' name='Place.TelephoneNumber' value=''>"
+                +       "<span class='text-danger field-validation-valid' data-valmsg-for='Place.TelephoneNumber' data-valmsg-replace='true'></span>"
+                +   "</div>"
+                + "</div>");
+            }
+        else {
+            $("#createPlace").empty();
+        }
+    }
     </script>
 
 <h2>Create</h2>
@@ -90,44 +100,14 @@
                 <select asp-for="Musician.PlaceID" class="form-control" asp-items="ViewBag.PlaceID" style="float: left;" onchange="ShowPlaceCreation(this)"></select>
             </div>
         </div>    
-        <div id="createPlace" style="padding-left: 45px;">
-            <div class="form-group">
-                <label asp-for="Place.Address" class="col-md-2 control-label"> New Address</label>
-                <div class="col-md-10">
-                    <input asp-for="Place.Address" class="form-control" placeholder="New Address" />
-                    <span asp-validation-for="Place.Address" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="Place.TelephoneNumber" class="col-md-2 control-label"> New Number</label>
-                <div class="col-md-10">
-                    <input asp-for="Place.TelephoneNumber" class="form-control" placeholder="New Number" />
-                    <span asp-validation-for="Place.TelephoneNumber" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
+        <div id="createPlace" style="padding-left: 45px;"></div>
         <div class="form-group">
             <label asp-for="Musician.InstrumentID" class="col-md-2 control-label">Instrument</label>
             <div class="col-md-10">
                 <select asp-for="Musician.InstrumentID" class ="form-control" asp-items="ViewBag.InstrumentID" onchange="ShowInstrumentCreation(this)"></select>
             </div>
         </div>
-        <div id="createInstrument" style="padding-left: 45px;">
-            <div class="form-group">
-                <label asp-for="Instrument.Name" class="col-md-2 control-label">New Name</label>
-                <div class="col-md-10">
-                    <input asp-for="Instrument.Name" class="form-control" placeholder="New Instrument Name" />
-                    <span asp-validation-for="Instrument.Name" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="Instrument.Key" class="col-md-2 control-label">New Key</label>
-                <div class="col-md-10">
-                    <input asp-for="Instrument.Key" class="form-control" placeholder="New Instrument Key" />
-                    <span asp-validation-for="Instrument.Key" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
+        <div id="createInstrument" style="padding-left: 45px;"></div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />
@@ -143,3 +123,8 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script>
+    addLoadEvent(ShowInstrumentCreation(document.getElementById("Musician_InstrumentID").selectedIndex = "on_page_load"));
+    addLoadEvent(ShowPlaceCreation(document.getElementById("Musician_PlaceID").selectedIndex = "on_page_load"));
+</script>

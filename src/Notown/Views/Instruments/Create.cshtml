@@ -33,6 +33,7 @@
             <label class="col-md-2 control-label">Musician</label>
             <div class="col-md-10">
                 <select asp-for="MusicianIDs" class="form-control" asp-items="ViewBag.MusicianID" multiple="multiple"></select>
+                <span asp-validation-for="MusicianIDs" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">

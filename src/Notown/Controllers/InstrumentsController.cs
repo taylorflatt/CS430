@@ -93,7 +93,8 @@ namespace Notown.Controllers
             temp.Add(new SelectListItem
             {
                 Text = "No Musician",
-                Value = "-1"
+                Value = "-1",
+                Selected = true
             });
 
             foreach (var musician in _context.Musician)
@@ -117,23 +118,20 @@ namespace Notown.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Instrument, MusicianIDs")] CreateInstrumentViewModel model)
         {
-            if (string.IsNullOrEmpty(model.Instrument.Key))
-                ModelState.AddModelError("", "You must enter a Key for this instrument.");
-
-            if (string.IsNullOrEmpty(model.Instrument.Name))
-                ModelState.AddModelError("", "You must enter a Name for this instrument.");
+            if (model.MusicianIDs == null)
+                ModelState.AddModelError("MusicianIDs", "You must select at least one option! If you want 'No Musicians', select that option.");
 
             var uniqueName = from k in _context.Instrument
                             where k.Name == model.Instrument.Name
                             select 1;
 
             if (uniqueName.Any())
-                ModelState.AddModelError("", "The instrument name has already been added to the database!");
+                ModelState.AddModelError("Instrument.Name", "The instrument name has already been added to the database!");
 
             // They selected 'No Musician' AND a musician. Nonsensical choice.
-            if (model.MusicianIDs.Contains(-1) && model.MusicianIDs.Count() > 1)
+            if (model.MusicianIDs != null && model.MusicianIDs.Contains(-1) && model.MusicianIDs.Count() > 1)
             {
-                ModelState.AddModelError("", "You selected 'No Musician' but also selected at least another musician as well. If you don't wish to add musicians to this" +
+                ModelState.AddModelError("MusicianIDs", "You selected 'No Musician' but also selected at least another musician as well. If you don't wish to add musicians to this" +
                     " instrument, then only select the 'No Musician' option. Otherwise, unselect 'No Musician' and choose as many musicians who will be assigned to this" +
                     " instrument.");
             }
@@ -182,7 +180,8 @@ namespace Notown.Controllers
             temp.Add(new SelectListItem
             {
                 Text = "No Musician",
-                Value = "-1"
+                Value = "-1",
+                Selected = true
             });
 
             foreach (var musician in _context.Musician)
@@ -225,10 +224,11 @@ namespace Notown.Controllers
 
             var uniqueName = from n in _context.Instrument
                              where n.Name.Equals(instrument.Name)
-                             select 1;
+                             select n.ID;
 
-            if(uniqueName.Any())
-                ModelState.AddModelError("", "An instrument with that name already exists!");
+            // If there is an instrument and it isn't the same instrument with the input name.
+            if(!uniqueName.FirstOrDefault().Equals(instrument.ID) && uniqueName.Count() > 0)
+                ModelState.AddModelError("Name", "An instrument with that name already exists!");
 
             if (ModelState.IsValid)
             {
@@ -245,6 +245,7 @@ namespace Notown.Controllers
                     else
                         throw;
                 }
+
                 return RedirectToAction("Index");
             }
 

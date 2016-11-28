@@ -91,9 +91,7 @@ namespace Notown.Controllers
                 .SingleOrDefaultAsync(m => m.ID == id);
 
             if (musician == null)
-            {
                 return NotFound();
-            }
 
             return View(musician);
         }
@@ -110,13 +108,15 @@ namespace Notown.Controllers
             instrumentList.Add(new SelectListItem
             {
                 Text = "Create New...",
-                Value = "-1"
+                Value = "-1",
+                Selected = true
             });
 
             placeList.Add(new SelectListItem
             {
                 Text = "Create New...",
-                Value = "-1"
+                Value = "-1",
+                Selected = true
             });
 
             foreach (var tempInstrument in _context.Instrument)
@@ -160,17 +160,17 @@ namespace Notown.Controllers
                 createNewPlace = true;
 
             if (string.IsNullOrEmpty(model.Musician.Name))
-                ModelState.AddModelError("", "You must input a name for the artist.");
+                ModelState.AddModelError("Musician.Name", "You must input a name for the artist.");
 
             if (string.IsNullOrEmpty(model.Musician.Ssn))
-                ModelState.AddModelError("", "You must input an SSN for the artist.");
+                ModelState.AddModelError("Musician.Ssn", "You must input an SSN for the artist.");
 
             var uniqueSsn = from p in _context.Musician
                             where p.Ssn == model.Musician.Ssn
                             select p.Name;
 
             if (uniqueSsn.Any())
-                ModelState.AddModelError("", "That SSN (" + model.Musician.Ssn + ") already belongs to " + uniqueSsn.First() + ". To assign this SSN to "
+                ModelState.AddModelError("Musician.Ssn", "That SSN (" + model.Musician.Ssn + ") already belongs to " + uniqueSsn.First() + ". To assign this SSN to "
                     + model.Musician.Name + ", " + uniqueSsn.First() + " must first be deleted.");
 
             if (createNewInstrument)
@@ -180,7 +180,13 @@ namespace Notown.Controllers
                                      select i.Name;
 
                 if (uniqueInstruName.Any())
-                    ModelState.AddModelError("", "That instrument name already exists. It must first be removed before you can add it. ");
+                    ModelState.AddModelError("Instrument.Name", "That instrument name already exists. It must first be removed before you can add it. ");
+
+                if (string.IsNullOrEmpty(model.Instrument.Name))
+                    ModelState.AddModelError("Instrument.Name", "You must input a name for the new instrument.");
+
+                if (string.IsNullOrEmpty(model.Instrument.Key))
+                    ModelState.AddModelError("Instrument.Key", "You must input a key for the new instrument.");
             }
 
             if(createNewPlace)
@@ -194,18 +200,18 @@ namespace Notown.Controllers
                                       select t.Place.Address;
 
                 if (uniqueAddress.Any())
-                    ModelState.AddModelError("", "That address already exists. You may add this musician to that artist by choosing it in the dropdown list rather than creating "
+                    ModelState.AddModelError("Place.Address", "That address already exists. You may add this musician to that artist by choosing it in the dropdown list rather than creating "
                         + "a new address.");
 
                 if (uniqueTelephone.Any())
-                    ModelState.AddModelError("", "That telephone number already belongs to " + uniqueTelephone.First() + ". To assign number: " + model.Place.TelephoneNumber
+                    ModelState.AddModelError("Place.TelephoneNumber", "That telephone number already belongs to " + uniqueTelephone.First() + ". To assign number: " + model.Place.TelephoneNumber
                         + " to this address, the " + uniqueTelephone.First() + " must first be deleted.");
 
-                if (string.IsNullOrEmpty(model.Place.TelephoneNumber))
-                    ModelState.AddModelError("", "You must input a telephone number for the artist.");
-
                 if (string.IsNullOrEmpty(model.Place.Address))
-                    ModelState.AddModelError("", "You must input an address for the artist.");
+                    ModelState.AddModelError("Place.Address", "You must input an address for the artist.");
+
+                if (string.IsNullOrEmpty(model.Place.TelephoneNumber))
+                    ModelState.AddModelError("Place.TelephoneNumber", "You must input a telephone number for the artist.");
             }
 
             var instrument = new Instrument();
@@ -322,13 +328,15 @@ namespace Notown.Controllers
                 instrumentList.Add(new SelectListItem
                 {
                     Text = "Create New...",
-                    Value = "-1"
+                    Value = "-1",
+                    Selected = true
                 });
 
                 placeList.Add(new SelectListItem
                 {
                     Text = "Create New...",
-                    Value = "-1"
+                    Value = "-1",
+                    Selected = true
                 });
 
                 foreach (var tempInstrument in _context.Instrument)
