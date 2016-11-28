@@ -1,10 +1,10 @@
-@model Notown.Helpers.PaginatedList<Notown.Models.Musician>
+@model Notown.Helpers.PaginatedList<Notown.Models.Place>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Musician Homes";
 }
 
-<h2>Musicians</h2>
+<h2>Musician's Homes</h2>
 
 <p>
     <a asp-action="Create" style="float:left;">Create New</a>
@@ -13,10 +13,9 @@
     <div class="form-actions no-color" style="float: right;">
         <p>
             Search:
-            <input type="text" name="SearchString" value="@ViewData["currentFilter"]" placeholder="Name, Instru, Address" />
+            <input type="text" name="SearchString" value="@ViewData["currentFilter"]" placeholder="Address or Number" />
             <input type="submit" value="Search" class="btn btn-default" /> |
             <a asp-action="Index">Back to List</a>
-
         </p>
     </div>
 </form>
@@ -24,13 +23,10 @@
     <thead>
         <tr>
                 <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.NameSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.AddressSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Address</a>
                 </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.InstrumentSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Instrument</a>
-            </th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.PlaceSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Address</a>
+                Telephone Number
             </th>
             @if (User.Identity.IsAuthenticated)
             {
@@ -44,13 +40,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.Address)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Instrument.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Place.Address)
+                @Html.DisplayFor(modelItem => item.Telephone.Number)
             </td>
             @if (User.Identity.IsAuthenticated)
             {
@@ -64,6 +57,7 @@
 }
     </tbody>
 </table>
+
 
 @{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";

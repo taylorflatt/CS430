@@ -1,0 +1,49 @@
+@model Notown.Models.Place
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Place</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Telephone)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Telephone.Number)
+        </dd>
+        <dt>
+            Occupants
+        </dt>
+        <dd>
+            @if (Model.Musicians.Count() != 0)
+            {
+                <ol style="padding-left: 20px;">
+                    @foreach (var musician in Model.Musicians)
+                    {
+                        <li><a asp-action="Details" asp-controller="Musicians" asp-route-id="@musician.ID">@Html.DisplayFor(modelItem => musician.Name)</a></li>
+                    }
+                </ol>
+            }
+            else
+            {
+                <p>No musicians current live here! Try <a asp-area="" asp-controller="Musicians" asp-action="Index">adding one</a>!</p>
+
+            }
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

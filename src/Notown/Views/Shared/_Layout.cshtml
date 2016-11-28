@@ -34,6 +34,16 @@
                     <li><a asp-area="" asp-controller="Musicians" asp-action="Index">Artists</a></li>
                     <li><a asp-area="" asp-controller="Albums" asp-action="Index">Albums</a></li>
                     <li><a asp-area="" asp-controller="Songs" asp-action="Index">Songs</a></li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li role="presentation" class="dropdown">
+                            <a id="dLabel" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Extras<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a asp-area="" asp-controller="Places" asp-action="Index">Places</a></li>
+                                <li><a asp-area="" asp-controller="Instruments" asp-action="Index">Instruments</a></li>
+                            </ul>
+                        </li>
+                    }
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                 </ul>
