@@ -39,15 +39,29 @@
             <dd>
                 @Html.DisplayFor(model => model.Place.Address)
             </dd>
+            <dt>
+                Telephone Number
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Place.TelephoneNumber)
+            </dd>
         }
         <dt>
             Album List
         </dt>
         <dd>
-            @foreach (var album in Model.Albums)
+            @if (Model.Albums.Count() != 0)
             {
-                <a asp-action="Details" asp-controller="Albums" asp-route-id="@album.ID">@Html.DisplayFor(modelItem => album.Name)</a>
-                <br />
+                    @foreach (var album in Model.Albums)
+                    {
+                        <a asp-action="Details" asp-controller="Albums" asp-route-id="@album.ID">@Html.DisplayFor(modelItem => album.Name)</a>
+                        <br />
+                    }
+            }
+            else
+            {
+                <p>No Albums have been added to this musician yet. Try <a asp-area="" asp-controller="Albums" asp-action="Index">adding one</a>!</p>
+
             }
         </dd>
         <dt>
@@ -55,22 +69,27 @@
             <br />
         </dt>
         <dd>
-            <strong>(Album - Song)</strong>
-            <br />
-            @foreach (var song in Model.Songs)
+            @if (Model.Songs.Count() != 0)
             {
-                if (song.AlbumID != null)
-                {
-                    @Html.DisplayFor(modelItem => song.Album.Name)
-                    <text> - </text> <a asp-action="Details" asp-controller="Songs" asp-route-id="@song.SongID">@Html.DisplayFor(modelItem => song.Title)</a>;
-
-                }
-                else
-                {
-                    <text><em>No Album</em>- </text>@Html.DisplayFor(modelItem => song.Title)
-                }
+                <strong>(Album - Song)</strong>
                 <br />
+                @foreach (var song in Model.Songs)
+                {
+                    if (song.AlbumID != null)
+                    {
+                        @Html.DisplayFor(modelItem => song.Album.Name)
+                        <text> - </text>
+                        <a asp-action="Details" asp-controller="Songs" asp-route-id="@song.SongID">@Html.DisplayFor(modelItem => song.Title)</a>;
+                        <br />
+                    }
+                }
             }
+            else
+            {
+                <p>No Songs have been added to this musician yet. Try <a asp-area="" asp-controller="Songs" asp-action="Index">adding one</a>!</p>
+
+            }
+
         </dd>
     </dl>
 </div>

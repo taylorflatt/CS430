@@ -26,15 +26,18 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.NameSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
-                </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.NameSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Name</a>
+            </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewBag.InstrumentSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Instrument</a>
             </th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.PlaceSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Address</a>
-            </th>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.PlaceSortParm" asp-route-currentFilter="@ViewData["CurrentFilter"]">Address</a>
+                </th>
+            }
             <th>
                 Options
             </th>
@@ -49,9 +52,12 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Instrument.Name)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Place.Address)
-            </td>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.Place.Address)
+                </td>
+            }
             <td>
                 @if (User.Identity.IsAuthenticated)
                 {

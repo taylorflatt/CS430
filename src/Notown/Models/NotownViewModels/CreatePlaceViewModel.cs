@@ -2,9 +2,9 @@
 
 namespace Notown.Models.NotownViewModels
 {
-    public class CreateInstrumentViewModel
+    public class CreatePlaceViewModel
     {
-        public Instrument Instrument { get; set; }
+        public Place Place { get; set; }
         public List<int> MusicianIDs { get; set; }
     }
 }

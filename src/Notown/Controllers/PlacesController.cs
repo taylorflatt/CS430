@@ -9,6 +9,7 @@ using Notown.Data;
 using Notown.Models;
 using Microsoft.AspNetCore.Authorization;
 using Notown.Helpers;
+using Notown.Models.NotownViewModels;
 
 namespace Notown.Controllers
 {
@@ -81,6 +82,24 @@ namespace Notown.Controllers
         // GET: Places/Create
         public IActionResult Create()
         {
+            List<SelectListItem> temp = new List<SelectListItem>();
+
+            temp.Add(new SelectListItem
+            {
+                Text = "No Musician",
+                Value = "-1"
+            });
+
+            foreach (var musician in _context.Musician)
+            {
+                temp.Add(new SelectListItem
+                {
+                    Text = musician.Name + " (" + musician.Ssn + ")",
+                    Value = Convert.ToString(musician.ID)
+                });
+            }
+
+            ViewData["MusicianID"] = temp;
             ViewData["TelephoneNumber"] = new SelectList(_context.Telephone, "Number", "Number");
 
             return View();
@@ -91,30 +110,38 @@ namespace Notown.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Address,TelephoneNumber")] Place model)
+        public async Task<IActionResult> Create([Bind("Place, MusicianIDs")] CreatePlaceViewModel model)
         {
             var uniqueAddress = from a in _context.Place
-                                where a.Address == model.Address
+                                where a.Address == model.Place.Address
                                 select a.Address;
 
             var uniqueTelephone = from t in _context.Telephone
-                                  where t.Number == model.TelephoneNumber
+                                  where t.Number == model.Place.TelephoneNumber
                                   select t.Place.Address;
 
             if (uniqueAddress.Any())
                 ModelState.AddModelError("", "That address already exists.");
 
             if (uniqueTelephone.Any())
-                ModelState.AddModelError("", "That telephone number already belongs to " + uniqueTelephone.First() + ". To assign number: " + model.TelephoneNumber
+                ModelState.AddModelError("", "That telephone number already belongs to " + uniqueTelephone.First() + ". To assign number: " + model.Place.TelephoneNumber
                     + " to this address, the " + uniqueTelephone.First() + " must first be deleted.");
+
+            // They selected 'No Musician' AND a musician. Nonsensical choice.
+            if (model.MusicianIDs.Contains(-1) && model.MusicianIDs.Count() > 1)
+            {
+                ModelState.AddModelError("", "You selected 'No Musician' but also selected at least another musician as well. If you don't wish to add musicians to this" +
+                    " home, then only select the 'No Musician' option. Otherwise, unselect 'No Musician' and choose as many musicians who will be assigned to this" +
+                    " home.");
+            }
 
             var place = new Place();
             var telephone = new Telephone();
 
-            place.Address = model.Address;
-            place.TelephoneNumber = model.TelephoneNumber;
+            place.Address = model.Place.Address;
+            place.TelephoneNumber = model.Place.TelephoneNumber;
 
-            telephone.Number = model.TelephoneNumber;
+            telephone.Number = model.Place.TelephoneNumber;
 
             if (ModelState.IsValid)
             {
@@ -125,10 +152,58 @@ namespace Notown.Controllers
                 _context.Add(place);
                 _context.SaveChanges();
 
-                return RedirectToAction("Index");
+                if (!model.MusicianIDs.Contains(-1))
+                {
+                    foreach (var id in model.MusicianIDs)
+                    {
+                        var musician = _context.Musician.SingleOrDefault(m => m.ID == id);
+                        musician.PlaceID = _context.Place.SingleOrDefault(m => m.Address == model.Place.Address).ID;
+
+                        _context.Musician.Update(musician);
+                    }
+                }
+
+                // If there was an error, we need to remove the newly added place and telephone from the database and redisplay the form.
+                // This should never (or rarely) happen. This is only if something massively goes wrong in updating the musician PlaceID.
+                if (!ModelState.IsValid)
+                {
+                    var newTelephone = _context.Telephone.SingleOrDefaultAsync(t => t.Number == model.Place.TelephoneNumber);
+                    var newPlace = _context.Place.SingleOrDefaultAsync(p => p.Address == model.Place.Address);
+
+                    _context.Remove(newTelephone);
+                    _context.Remove(newPlace);
+
+                    await _context.SaveChangesAsync();
+                }
+
+                // Only if completely successful
+                else
+                {
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("Index");
+                }
             }
 
-            ViewData["TelephoneNumber"] = new SelectList(_context.Telephone, "Number", "Number", place.TelephoneNumber);
+            List<SelectListItem> temp = new List<SelectListItem>();
+
+            temp.Add(new SelectListItem
+            {
+                Text = "No Musician",
+                Value = "-1"
+            });
+
+            foreach (var musician in _context.Musician)
+            {
+                temp.Add(new SelectListItem
+                {
+                    Text = musician.Name + " (" + musician.Ssn + ")",
+                    Value = Convert.ToString(musician.ID)
+                });
+            }
+
+            ViewData["MusicianID"] = temp;
+            ViewData["TelephoneNumber"] = new SelectList(_context.Telephone, "Number", "Number");
 
             return View(model);
         }
