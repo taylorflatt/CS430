@@ -52,11 +52,22 @@
         </dd>
         <dt>
             Song List
+            <br />
         </dt>
         <dd>
+            <strong>(Album - Song)</strong>
+            <br />
             @foreach (var song in Model.Songs)
             {
-                @Html.DisplayFor(modelItem => song.Title)
+                if (song.AlbumID != null)
+                {
+                    @Html.DisplayFor(modelItem => song.Album.Name) <text> - </text> @Html.DisplayFor(modelItem => song.Title);
+
+                }
+                else
+                {
+                    <text><em>No Album</em>- </text>@Html.DisplayFor(modelItem => song.Title)
+                }
                 <br />
             }
         </dd>
