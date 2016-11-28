@@ -28,12 +28,11 @@
         <dd>
             @if (Model.Musicians.Count() != 0)
             {
-                <ol>
                     @foreach (var musician in Model.Musicians)
                     {
-                        <li>@Html.DisplayFor(modelItem => musician.Name)</li>
+                        @Html.DisplayFor(modelItem => musician.Name)
+                        <br />
                     }
-                </ol>
             }
             else
             {
