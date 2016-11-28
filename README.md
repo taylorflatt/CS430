@@ -8,7 +8,8 @@ that act as the unique id for each row while SSN is still included as unique and
 
 Also, since the requirement stated that a code needs to be input by the Notown Staff, I decided that instead of 
 incorporating a role-based or policy-based authentication system I would simply require the code be input at time 
-of account creation. Then just assume every authenticated user is a staff member and obfuscate data accordingly.
+of account creation. Then just assume every authenticated user is a staff member and obfuscate data accordingly. 
+Obviously, in a real-world situation, this would not be an appropriate solution.
 
 **Sample User Account**:
 
