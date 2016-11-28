@@ -3,9 +3,11 @@
 
 ![alt text](https://github.com/taylorflatt/CS430/blob/master/sample_homepage.gif "View of the homepage")
 
-**Description**: I have written this project in C# using ASP.NET Core MVC as a backend. In order to see more detailed information about how to use each function of the website, [see the wiki](https://github.com/taylorflatt/CS430/wiki).
+##Description
+I have written this project in C# using ASP.NET Core MVC as a backend. In order to see more detailed information about how to use each function of the website, [see the wiki](https://github.com/taylorflatt/CS430/wiki).
 
-**Challenges**: Due to the requirements, SSN is considered a primary key. However, because of the limitations 
+##Challenges
+Due to the requirements, SSN is considered a primary key. However, because of the limitations 
 of ASP.NET Core, PKs are not editable with the schema I have used. Therefore, I have used surrogate keys 
 that act as the unique id for each row while SSN is still included as unique and editable.
 
@@ -14,7 +16,7 @@ incorporating a role-based or policy-based authentication system I would simply 
 of account creation. Then just assume every authenticated user is a staff member and obfuscate data accordingly. 
 Obviously, in a real-world situation, this would not be an appropriate solution.
 
-**What would I do differently?**
+##What would I do differently?
 
 1. I would include more robust validation of data. Instead of checking it in the controller (some replicated code), I would offload it to a class and have a generic integrity checker.
 
@@ -28,7 +30,8 @@ Obviously, in a real-world situation, this would not be an appropriate solution.
 
 6. I would have liked to add in a custom paging option to allow the user to specifc the number of items per page (10, 25, 50, 100) for instance rather than have a static number in the controller. I simply ran out of time for this function unfortunately.
 
-**Notes**: Due to the restrictions placed on this project, there are some interesting scenarios. For instance, every musician _MUST_ have an instrument associated with them. So if an instrument is deleted, then the associated musician(s) must be deleted as well. 
+##Notes
+Due to the restrictions placed on this project, there are some interesting scenarios. For instance, every musician _MUST_ have an instrument associated with them. So if an instrument is deleted, then the associated musician(s) must be deleted as well. 
 
 However, in a realistic situation this wouldn't be the way to handle this scenario. Ideally, you would allow the instrument to be nullalble (a musician can play no instruments, maybe he/she is a vocalist), a Collection (a musician can play multiple instruments), or a combination. Those sorts of restrictions find their way throughout the project in similar and rear their heads when removing other related objects such as the situation described.
 
