@@ -25,7 +25,7 @@ namespace Notown.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            int pageSize = 5;
+            int pageSize = 10;
 
             ViewData["CurrentSort"] = sortOrder;    // Allows us to keep sort order in paging links.
             ViewData["TitleSortParm"] = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
@@ -80,18 +80,15 @@ namespace Notown.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var album = await _context.Album
                 .Include(a => a.Musician)
                 .Include(s => s.Songs)
                 .SingleOrDefaultAsync(m => m.ID == id);
+
             if (album == null)
-            {
                 return NotFound();
-            }
 
             return View(album);
         }
@@ -101,6 +98,7 @@ namespace Notown.Controllers
         public IActionResult Create()
         {
             List<SelectListItem> temp = new List<SelectListItem>();
+
             foreach(var musician in _context.Musician)
             {
                 temp.Add(new SelectListItem
@@ -129,7 +127,9 @@ namespace Notown.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+
             ViewData["MusicianSsn"] = new SelectList(_context.Musician, "ID", "Ssn", album.MusicianID);
+
             return View(album);
         }
 
@@ -138,17 +138,15 @@ namespace Notown.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var album = await _context.Album.SingleOrDefaultAsync(m => m.ID == id);
+
             if (album == null)
-            {
                 return NotFound();
-            }
 
             List<SelectListItem> temp = new List<SelectListItem>();
+
             foreach (var musician in _context.Musician)
             {
                 temp.Add(new SelectListItem
@@ -172,9 +170,7 @@ namespace Notown.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Speed,CopyrightDate,MusicianID")] Album album)
         {
             if (id != album.ID)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
@@ -186,17 +182,16 @@ namespace Notown.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!AlbumExists(album.ID))
-                    {
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
+
                 return RedirectToAction("Index");
             }
+
             ViewData["MusicianSsn"] = new SelectList(_context.Musician, "ID", "Ssn", album.MusicianID);
+
             return View(album);
         }
 
@@ -205,18 +200,15 @@ namespace Notown.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var album = await _context.Album
                 .Include(a => a.Musician)
                 .Include(s => s.Songs)
                 .SingleOrDefaultAsync(m => m.ID == id);
+
             if (album == null)
-            {
                 return NotFound();
-            }
 
             return View(album);
         }
@@ -241,6 +233,7 @@ namespace Notown.Controllers
 
             _context.Album.Remove(album);
             await _context.SaveChangesAsync();
+
             return RedirectToAction("Index");
         }
 

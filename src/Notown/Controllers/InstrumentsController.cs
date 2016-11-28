@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Notown.Data;
 using Notown.Models;
@@ -25,7 +24,7 @@ namespace Notown.Controllers
         // GET: Instruments
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            int pageSize = 5;
+            int pageSize = 10;
 
             ViewData["CurrentSort"] = sortOrder;    // Allows us to keep sort order in paging links.
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -72,17 +71,14 @@ namespace Notown.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var instrument = await _context.Instrument
                 .Include(m => m.Musicians)
                 .SingleOrDefaultAsync(m => m.ID == id);
+
             if (instrument == null)
-            {
                 return NotFound();
-            }
 
             return View(instrument);
         }
@@ -104,8 +100,10 @@ namespace Notown.Controllers
             {
                 _context.Add(instrument);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction("Index");
             }
+
             return View(instrument);
         }
 
@@ -113,15 +111,13 @@ namespace Notown.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var instrument = await _context.Instrument.SingleOrDefaultAsync(m => m.ID == id);
+
             if (instrument == null)
-            {
                 return NotFound();
-            }
+
             return View(instrument);
         }
 
@@ -133,9 +129,7 @@ namespace Notown.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Key")] Instrument instrument)
         {
             if (id != instrument.ID)
-            {
                 return NotFound();
-            }
 
             var uniqueName = from n in _context.Instrument
                              where n.Name.Equals(instrument.Name)
@@ -154,13 +148,10 @@ namespace Notown.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!InstrumentExists(instrument.ID))
-                    {
                         return NotFound();
-                    }
+
                     else
-                    {
                         throw;
-                    }
                 }
                 return RedirectToAction("Index");
             }
@@ -172,17 +163,14 @@ namespace Notown.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var instrument = await _context.Instrument
                 .Include(m => m.Musicians)
                 .SingleOrDefaultAsync(m => m.ID == id);
+
             if (instrument == null)
-            {
                 return NotFound();
-            }
 
             return View(instrument);
         }
@@ -206,14 +194,16 @@ namespace Notown.Controllers
                     {
                         _context.Song.Remove(song);
                     }
+
                     _context.Musician.Remove(tempMusician);
                 }
+
                 _context.SaveChanges();
             }
 
-
             _context.Instrument.Remove(instrument);
             await _context.SaveChangesAsync();
+
             return RedirectToAction("Index");
         }
 

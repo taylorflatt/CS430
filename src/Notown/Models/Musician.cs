@@ -10,6 +10,9 @@ namespace Notown.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
+        /// <summary>
+        /// Programmatically ensured to be unique at time of creation (and any subsequent edits).
+        /// </summary>
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Display(Name="SSN")]
         [StringLength(9, MinimumLength = 9, ErrorMessage = "The SSN must be exactly 9 digits.")]

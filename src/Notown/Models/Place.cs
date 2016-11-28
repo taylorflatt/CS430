@@ -10,6 +10,9 @@ namespace Notown.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
+        /// <summary>
+        /// Programmatically ensured to be unqiue at time of creation (and any subsequent edits).
+        /// </summary>
         [MaxLength(30, ErrorMessage = "The address cannot be longer than 30 characters.")]
         public string Address { get; set; }
 

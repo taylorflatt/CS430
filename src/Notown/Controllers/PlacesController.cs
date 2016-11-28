@@ -25,7 +25,7 @@ namespace Notown.Controllers
         // GET: Places
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            int pageSize = 5;
+            int pageSize = 10;
 
             ViewData["CurrentSort"] = sortOrder;    // Allows us to keep sort order in paging links.
             ViewData["AddressSortParm"] = String.IsNullOrEmpty(sortOrder) ? "address_desc" : "";
@@ -65,18 +65,15 @@ namespace Notown.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var place = await _context.Place
                 .Include(p => p.Telephone)
                 .Include(m => m.Musicians)
                 .SingleOrDefaultAsync(m => m.ID == id);
+
             if (place == null)
-            {
                 return NotFound();
-            }
 
             return View(place);
         }
@@ -85,6 +82,7 @@ namespace Notown.Controllers
         public IActionResult Create()
         {
             ViewData["TelephoneNumber"] = new SelectList(_context.Telephone, "Number", "Number");
+
             return View();
         }
 
@@ -131,6 +129,7 @@ namespace Notown.Controllers
             }
 
             ViewData["TelephoneNumber"] = new SelectList(_context.Telephone, "Number", "Number", place.TelephoneNumber);
+
             return View(model);
         }
 
@@ -138,15 +137,12 @@ namespace Notown.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var place = await _context.Place.SingleOrDefaultAsync(m => m.ID == id);
+
             if (place == null)
-            {
                 return NotFound();
-            }
 
             List<SelectListItem> temp = new List<SelectListItem>();
 
@@ -182,8 +178,6 @@ namespace Notown.Controllers
 
             ViewData["TelephoneNumber"] = temp;
 
-
-            //ViewData["TelephoneNumber"] = new SelectList(_context.Telephone, "Number", "Number", place.TelephoneNumber);
             return View(place);
         }
 
@@ -195,9 +189,7 @@ namespace Notown.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("ID,Address,TelephoneNumber")] Place place)
         {
             if (id != place.ID)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
@@ -209,17 +201,16 @@ namespace Notown.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!PlaceExists(place.ID))
-                    {
                         return NotFound();
-                    }
+
                     else
-                    {
                         throw;
-                    }
                 }
                 return RedirectToAction("Index");
             }
+
             ViewData["TelephoneNumber"] = new SelectList(_context.Telephone, "Number", "Number", place.TelephoneNumber);
+
             return View(place);
         }
 
@@ -227,18 +218,15 @@ namespace Notown.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var place = await _context.Place
                 .Include(m => m.Musicians)
                 .Include(p => p.Telephone)
                 .SingleOrDefaultAsync(m => m.ID == id);
+
             if (place == null)
-            {
                 return NotFound();
-            }
 
             return View(place);
         }
@@ -264,14 +252,18 @@ namespace Notown.Controllers
                     {
                         _context.Song.Remove(song);
                     }
+
                     _context.Musician.Remove(tempMusician);
                 }
+
                 _context.SaveChanges();
             }
+
             _context.Place.Remove(place);
             _context.SaveChanges();
 
             var telephone = await _context.Telephone.SingleOrDefaultAsync(t => t.Number == place.TelephoneNumber);
+
             _context.Telephone.Remove(telephone);
             _context.SaveChanges();
 

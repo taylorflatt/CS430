@@ -26,7 +26,7 @@ namespace Notown.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            int pageSize = 5;
+            int pageSize = 10;
 
             ViewData["CurrentSort"] = sortOrder;    // Allows us to keep sort order in paging links.
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -81,9 +81,7 @@ namespace Notown.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var musician = await _context.Musician
                 .Include(m => m.Instrument)
@@ -108,7 +106,7 @@ namespace Notown.Controllers
             List<SelectListItem> placeList = new List<SelectListItem>();
 
             // Default Option
-            // Note: The Text option must be exactly this or else it needs changed in the view.
+            // Note: The Text option must be exactly this or else it needs changed in the view and HttpPost.
             instrumentList.Add(new SelectListItem
             {
                 Text = "Create New...",
@@ -243,13 +241,6 @@ namespace Notown.Controllers
 
                 if (createNewPlace)
                 {
-                    //var removeChars = new string[] { "(", ")", "-", " " };
-
-                    //foreach (var ch in removeChars)
-                    //{
-                    //    place.TelephoneNumber = place.TelephoneNumber.Replace(ch, string.Empty);
-                    //}
-
                     place.Address = model.Place.Address;
                     place.TelephoneNumber = model.Place.TelephoneNumber;
 
@@ -264,6 +255,7 @@ namespace Notown.Controllers
                         _context.SaveChanges();
                     }
 
+                    // Need to grab the ID assigned to the place we just created.
                     var placeID = from i in _context.Place
                                   where i.ID == place.ID
                                   select i.ID;
@@ -321,6 +313,7 @@ namespace Notown.Controllers
                     }
                 }
 
+                /// Redisplay the form back to the user.
                 List<SelectListItem> instrumentList = new List<SelectListItem>();
                 List<SelectListItem> placeList = new List<SelectListItem>();
 
@@ -368,17 +361,16 @@ namespace Notown.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var musician = await _context.Musician.SingleOrDefaultAsync(m => m.ID == id);
+
             if (musician == null)
-            {
                 return NotFound();
-            }
+
             ViewData["InstrumentID"] = new SelectList(_context.Instrument, "ID", "Name", musician.InstrumentID);
             ViewData["PlaceID"] = new SelectList(_context.Place, "ID", "Address", musician.PlaceID);
+
             return View(musician);
         }
 
@@ -410,10 +402,13 @@ namespace Notown.Controllers
                     else
                         throw;
                 }
+
                 return RedirectToAction("Index");
             }
+
             ViewData["InstrumentID"] = new SelectList(_context.Instrument, "ID", "Name", musician.InstrumentID);
             ViewData["PlaceID"] = new SelectList(_context.Place, "ID", "Address", musician.PlaceID);
+
             return View(musician);
         }
 
@@ -422,9 +417,7 @@ namespace Notown.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var musician = await _context.Musician
                 .Include(m => m.Instrument)
@@ -432,10 +425,9 @@ namespace Notown.Controllers
                 .Include(s => s.Songs)
                 .Include(a => a.Albums)
                 .SingleOrDefaultAsync(m => m.ID == id);
+
             if (musician == null)
-            {
                 return NotFound();
-            }
 
             return View(musician);
         }

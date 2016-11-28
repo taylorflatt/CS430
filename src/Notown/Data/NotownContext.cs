@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Notown.Models;
-using System.Data;
 
 namespace Notown.Data
 {
@@ -59,10 +58,6 @@ namespace Notown.Data
             builder.Entity<Musician>()
                 .HasIndex(s => s.Ssn)
                 .IsUnique();
-
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Notown.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            int pageSize = 5;
+            int pageSize = 10;
 
             ViewData["CurrentSort"] = sortOrder;    // Allows us to keep sort order in paging links.
             ViewData["TitleSortParm"] = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
@@ -80,18 +80,15 @@ namespace Notown.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var song = await _context.Song
                 .Include(s => s.Album)
                 .Include(s => s.Musician)
                 .SingleOrDefaultAsync(m => m.SongID == id);
+
             if (song == null)
-            {
                 return NotFound();
-            }
 
             return View(song);
         }
@@ -102,6 +99,7 @@ namespace Notown.Controllers
         {
             ViewData["AlbumID"] = new SelectList(_context.Album, "ID", "Name");
             ViewData["MusicianID"] = new SelectList(_context.Musician, "ID", "Name");
+
             return View();
         }
 
@@ -122,14 +120,18 @@ namespace Notown.Controllers
                     ModelState.AddModelError("", song.Title + " already exists on that album!");
                 }
             }
+
             if (ModelState.IsValid)
             {
                 _context.Add(song);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction("Index");
             }
+
             ViewData["AlbumID"] = new SelectList(_context.Album, "ID", "Name", song.AlbumID);
             ViewData["MusicianID"] = new SelectList(_context.Musician, "ID", "Name", song.MusicianID);
+
             return View(song);
         }
 
@@ -138,17 +140,16 @@ namespace Notown.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var song = await _context.Song.SingleOrDefaultAsync(m => m.SongID == id);
+
             if (song == null)
-            {
                 return NotFound();
-            }
+
             ViewData["AlbumID"] = new SelectList(_context.Album, "ID", "Name", song.AlbumID);
             ViewData["MusicianID"] = new SelectList(_context.Musician, "ID", "Name", song.MusicianID);
+
             return View(song);
         }
 
@@ -161,9 +162,7 @@ namespace Notown.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("SongID,Title,MusicianID,AlbumID")] Song song)
         {
             if (id != song.SongID)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
@@ -175,18 +174,18 @@ namespace Notown.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!SongExists(song.SongID))
-                    {
                         return NotFound();
-                    }
+
                     else
-                    {
                         throw;
-                    }
                 }
+
                 return RedirectToAction("Index");
             }
+
             ViewData["AlbumID"] = new SelectList(_context.Album, "ID", "Name", song.AlbumID);
             ViewData["MusicianSsn"] = new SelectList(_context.Musician, "ID", "Name", song.MusicianID);
+
             return View(song);
         }
 
@@ -195,18 +194,15 @@ namespace Notown.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var song = await _context.Song
                 .Include(s => s.Album)
                 .Include(s => s.Musician)
                 .SingleOrDefaultAsync(m => m.SongID == id);
+
             if (song == null)
-            {
                 return NotFound();
-            }
 
             return View(song);
         }
@@ -218,8 +214,10 @@ namespace Notown.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var song = await _context.Song.SingleOrDefaultAsync(m => m.SongID == id);
+
             _context.Song.Remove(song);
             await _context.SaveChangesAsync();
+
             return RedirectToAction("Index");
         }
 
