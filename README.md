@@ -1,5 +1,8 @@
 # CS430 Project
 
+
+![alt text](https://github.com/taylorflatt/CS430/blob/master/sample_homepage.gif "View of the homepage")
+
 **Description**: I have written this project in C# using ASP.NET Core MVC as a backend.
 
 **Challenges**: Due to the requirements, SSN is considered a primary key. However, because of the limitations 
@@ -36,6 +39,52 @@ code: cs430@SIUC
 **Sample Database**:
 
 I have included a sample database named "NotownDB.mdf". It is a localDB file. To attach it, simply open Server Explorer, click "Connect Database" and browse to the database. Just make sure that the connection string in appsettings.json matches the path to where you saved the database.
+
+# Creating Content
+
+To create any content, you must be a registered user having supplied the verification code cs430@SIUC upon registration.
+
+**Create a Home**:
+
+There are two ways to create a new Home for a musician. You can create it through the musician create page or through the Extras > Places create page. I will cover the latter in this section.
+
+1. To create a home, select Extras and then Places in then toolbar at the top of the webpage.
+
+2. Then, under the header "Musician's Homes", select "Create New".
+
+3. Now you can create an address for this home and a telephone number for it.
+
+**Create an Instrument**:
+
+1. To create an instrument, select Extras and then Instruments in the toolbar at the top of the webpage.
+
+2. Then, under the header "Instruments", select "Create New".
+
+3. Now you can create an instrument with its name and associated musical key.
+
+**Create an Artist**:
+
+1. To create an artist (musician), select Artists in the toolbar at the top of the webpage.
+
+2. Then under the header "Musicians", select "Create New".
+
+3. Now you can create an artist with its SSN and Name. At this point you are also able to create an Address and Instrument along with the artist if you would so choose. Otherwise, you can select any pre-existing home and instrument from the drop downs.
+
+**Create an Album**:
+
+1. To create an album, select Albums in the toolbar at the top of the webpage.
+
+2. Then under the header "Albums", select "Create New".
+
+3. Now you can create an album with its Name, associated Musician, Speed, and Copyright Date.
+
+**Create a Song**:
+
+1. To create a song, select Songs in the toolbar at the top of the webpage.
+
+2. Then under the header "Songs", select "Create New".
+
+3. Now you can create a song with its Title, associated Musician, and associated Album.
 
 # Project Requirements
 
