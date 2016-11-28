@@ -25,7 +25,7 @@ code: cs430@SIUC
 
 **Sample Database**:
 
-I have included a sample database named "NotownDb.mdf". It is a localDB file. To attach it, simply open Server Explorer, click "Connect Database" and browse to the database. Just make sure that the connection string in appsettings.json matches the path to where you saved the database.
+I have included a sample database named "NotownDB.mdf". It is a localDB file. To attach it, simply open Server Explorer, click "Connect Database" and browse to the database. Just make sure that the connection string in appsettings.json matches the path to where you saved the database.
 
 # Project Requirements
 
