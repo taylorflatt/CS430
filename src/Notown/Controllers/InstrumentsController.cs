@@ -8,6 +8,8 @@ using Notown.Data;
 using Notown.Models;
 using Microsoft.AspNetCore.Authorization;
 using Notown.Helpers;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Notown.Models.NotownViewModels;
 
 namespace Notown.Controllers
 {
@@ -86,6 +88,26 @@ namespace Notown.Controllers
         // GET: Instruments/Create
         public IActionResult Create()
         {
+            List<SelectListItem> temp = new List<SelectListItem>();
+
+            temp.Add(new SelectListItem
+            {
+                Text = "No Musician",
+                Value = "-1"
+            });
+
+            foreach (var musician in _context.Musician)
+            {
+                temp.Add(new SelectListItem
+                {
+                    Text = musician.Name + " (" + musician.Ssn + ")",
+                    Value = Convert.ToString(musician.ID)
+                });
+            }
+
+            ViewData["MusicianID"] = temp;
+
+            //ViewData["MusicianID"] = new MultiSelectList(_context.Musician, "ID", "Name");
             return View();
         }
 
@@ -94,18 +116,106 @@ namespace Notown.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name,Key")] Instrument instrument)
+        public async Task<IActionResult> Create([Bind("Instrument, MusicianIDs")] CreateInstrumentViewModel model)
         {
+            if (string.IsNullOrEmpty(model.Instrument.Key))
+                ModelState.AddModelError("", "You must enter a Key for this instrument.");
+
+            if (string.IsNullOrEmpty(model.Instrument.Name))
+                ModelState.AddModelError("", "You must enter a Name for this instrument.");
+
+            var uniqueName = from k in _context.Instrument
+                            where k.Name == model.Instrument.Name
+                            select 1;
+
+            if (uniqueName.Any())
+                ModelState.AddModelError("", "The instrument name has already been added to the database!");
+
+            // They selected 'No Musician' AND a musician. Nonsensical choice.
+            if (model.MusicianIDs.Contains(-1) && model.MusicianIDs.Count() > 1)
+            {
+                ModelState.AddModelError("", "You selected 'No Musician' but also selected at least another musician as well. If you don't wish to add musicians to this" +
+                    " instrument, then only select the 'No Musician' option. Otherwise, unselect 'No Musician' and choose as many musicians who will be assigned to this" +
+                    " instrument.");
+            }
+
+            var instrument = new Instrument();
+            instrument.Key = model.Instrument.Key;
+            instrument.Name = model.Instrument.Name;
+
             if (ModelState.IsValid)
             {
+                // Add the instrument first so the ID can be added to the musicians.
                 _context.Add(instrument);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("Index");
+                if (!model.MusicianIDs.Contains(-1))
+                {
+                    foreach (var id in model.MusicianIDs)
+                    {
+                        var musician = _context.Musician.SingleOrDefault(m => m.ID == id);
+                        musician.InstrumentID = _context.Instrument.SingleOrDefault(m => m.Name == model.Instrument.Name).ID;
+
+                        _context.Musician.Update(musician);
+                    }
+                }
+
+                // If there was an error, we need to remove the newly added instrument from the database and redisplay the form.
+                if (!ModelState.IsValid)
+                {
+                    var newInstrument = _context.Instrument.SingleOrDefault(m => m.Name == model.Instrument.Name);
+                    _context.Remove(newInstrument);
+
+                    await _context.SaveChangesAsync();
+                }
+
+                // Only if completely successful
+                else
+                {
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("Index");
+                }
             }
 
-            return View(instrument);
+            List<SelectListItem> temp = new List<SelectListItem>();
+
+            temp.Add(new SelectListItem
+            {
+                Text = "No Musician",
+                Value = "-1"
+            });
+
+            foreach (var musician in _context.Musician)
+            {
+                temp.Add(new SelectListItem
+                {
+                    Text = musician.Name + " (" + musician.Ssn + ")",
+                    Value = Convert.ToString(musician.ID)
+                });
+            }
+
+            ViewData["MusicianID"] = temp;
+
+            return View(model);
         }
+
+        //// POST: Instruments/Create
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("ID,Name,Key")] Instrument instrument)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(instrument);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    return View(instrument);
+        //}
 
         // GET: Instruments/Edit/5
         public async Task<IActionResult> Edit(int? id)
