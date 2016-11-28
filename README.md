@@ -11,6 +11,16 @@ incorporating a role-based or policy-based authentication system I would simply 
 of account creation. Then just assume every authenticated user is a staff member and obfuscate data accordingly. 
 Obviously, in a real-world situation, this would not be an appropriate solution.
 
+**What would I do differently?**
+
+1. I would include more robust validation of data. Instead of checking it in the controller (some replicated code), I would offload it to a class and have a generic integrity checker.
+
+2. I would probably change the schema further to be more realistic. Maybe include a Band table and the associated constraints.
+
+3. Change the way the authorization is handled. I would setup role-based authentication which would involve a bit more of a sophisticated back-end setup but would scale much better.
+
+4. I would probably spend a bit more time on the front-end to make it look nicer and include song samples with each song. It would reference a local repository of songs.
+
 **Notes**: Due to the restrictions placed on this project, there are some interesting scenarios. For instance, every musician _MUST_ have an instrument associated with them. So if an instrument is deleted, then the associated musician(s) must be deleted as well. 
 
 However, in a realistic situation this wouldn't be the way to handle this scenario. Ideally, you would allow the instrument to be nullalble (a musician can play no instruments, maybe he/she is a vocalist), a Collection (a musician can play multiple instruments), or a combination. Those sorts of restrictions find their way throughout the project in similar and rear their heads when removing other related objects such as the situation described.
