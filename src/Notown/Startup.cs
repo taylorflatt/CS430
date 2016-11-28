@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +8,6 @@ using Microsoft.Extensions.Logging;
 using Notown.Data;
 using Notown.Models;
 using Notown.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Notown
 {
@@ -55,41 +48,7 @@ namespace Notown
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            //services.Configure<IdentityOptions>(options =>
-            //{
-            //    // Password settings
-            //    options.Password.RequireDigit = true;
-            //    options.Password.RequiredLength = 8;
-            //    options.Password.RequireNonAlphanumeric = false;
-            //    options.Password.RequireUppercase = true;
-            //    options.Password.RequireLowercase = false;
-
-            //    // Lockout settings
-            //    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-            //    options.Lockout.MaxFailedAccessAttempts = 10;
-
-            //    // Cookie settings
-            //    options.Cookies.ApplicationCookie.ExpireTimeSpan = TimeSpan.FromDays(150);
-            //    options.Cookies.ApplicationCookie.LoginPath = "/Account/Login";
-            //    options.Cookies.ApplicationCookie.LogoutPath = "/Account/LogOff";
-            //    options.Cookies.ApplicationCookie.AutomaticChallenge = true;
-            //    options.Cookies.ApplicationCookie.AutomaticAuthenticate = true;
-            //    options.Cookies.ApplicationCookie.AccessDeniedPath = "/Account/LogIn";
-
-            //    // User settings
-            //    options.User.RequireUniqueEmail = true;
-            //});
-
             services.AddMvc();
-
-            //services.AddMvc(config =>
-            //{
-            //    var policy = new AuthorizationPolicyBuilder()
-            //                     .RequireAuthenticatedUser()
-            //                     .Build();
-
-            //    config.Filters.Add(new AuthorizeFilter(policy));
-            //});
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
@@ -99,15 +58,6 @@ namespace Notown
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, NotownContext context)
         {
-            //app.UseCookieAuthentication(new CookieAuthenticationOptions
-            //{
-            //    AuthenticationScheme = "Cookie",
-            //    LoginPath = new PathString("/Account/Login/"),
-            //    AccessDeniedPath = new PathString("/Error/401/"),
-            //    AutomaticAuthenticate = true,
-            //    AutomaticChallenge = true
-            //});
-
             app.UseStatusCodePages();
             app.UseStatusCodePagesWithRedirects("/Error/{0}");
 
