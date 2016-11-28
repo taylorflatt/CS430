@@ -1,5 +1,8 @@
 # CS430 Project
 
+
+![alt text](https://github.com/taylorflatt/CS430/blob/master/sample_homepage.gif "View of the homepage")
+
 **Description**: I have written this project in C# using ASP.NET Core MVC as a backend.
 
 **Challenges**: Due to the requirements, SSN is considered a primary key. However, because of the limitations 
