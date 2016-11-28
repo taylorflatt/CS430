@@ -24,6 +24,8 @@ Obviously, in a real-world situation, this would not be an appropriate solution.
 
 4. I would probably spend a bit more time on the front-end to make it look nicer and include song samples with each song. It would reference a local repository of songs.
 
+5. For dynamic effect, I made a conscious choice to dynamically create the html for the create musicians page. The only pitfall is if a user errors out, then they lose any information that they input into the New Place or New Instrument sections since they are recreated and data is not fed back into them. I would like to investigate if there is a better approach to this.
+
 **Notes**: Due to the restrictions placed on this project, there are some interesting scenarios. For instance, every musician _MUST_ have an instrument associated with them. So if an instrument is deleted, then the associated musician(s) must be deleted as well. 
 
 However, in a realistic situation this wouldn't be the way to handle this scenario. Ideally, you would allow the instrument to be nullalble (a musician can play no instruments, maybe he/she is a vocalist), a Collection (a musician can play multiple instruments), or a combination. Those sorts of restrictions find their way throughout the project in similar and rear their heads when removing other related objects such as the situation described.
