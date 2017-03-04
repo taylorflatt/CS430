@@ -1,4 +1,4 @@
-# CS430 Project
+# Notown Website
 
 
 ![alt text](https://github.com/taylorflatt/CS430/blob/master/sample_homepage.gif "View of the homepage")
